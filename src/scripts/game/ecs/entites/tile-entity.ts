@@ -9,8 +9,6 @@ import Position from 'game/ecs/components/position';
 import Orientation from 'game/ecs/components/orientation';
 import Coordinates from 'game/ecs/components/coordinates';
 
-const spriteColor = createColor(255, 255, 255);
-
 type TileComponentID = 'position' | 'orientation' | 'coordinates' | 'visual';
 export type Tile = Entity<TileComponentID, CMap>;
 
@@ -24,11 +22,14 @@ interface TileConf {
 }
 
 export const createTile = (conf: TileConf): Tile => {
+    const color = createColor(255, 255, 255);
+
     const entity = createEntity<TileComponentID, CMap>({
         coordinates: new Coordinates(conf.cx, conf.cy),
         position: new Position(conf.x, conf.y),
         orientation: new Orientation(),
-        visual: new Visual(conf.sprite, createRectangle(conf.size, conf.size), spriteColor)
+        visual: new Visual(conf.sprite, createRectangle(conf.size, conf.size), color)
     });
+
     return entity as Tile;
 };

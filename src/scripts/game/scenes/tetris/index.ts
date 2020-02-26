@@ -10,6 +10,7 @@ import GameAtlas from 'game/atlas';
 import Grid from 'game/scenes/tetris/grid';
 import GameScene, { GameSceneConf } from 'game/scene';
 import { Tile, createTile } from 'game/ecs/entites/tile-entity';
+import { setColorAlpha } from 'engine/graphics/color';
 
 const OFF_LEFT = (SPRITE_SIZE * GRID_WIDTH - 1) / 2;
 const OFF_TOP = (SPRITE_SIZE * GRID_HEIGHT - 1) / 2;
@@ -77,6 +78,8 @@ class TetrisScene extends GameScene {
             return;
         }
         const atlas = textures[0];
+        const animation = grid.getAnimation();
+        const progress = animation ? animation.getProgress() : 1.0;
 
         for (const { coordinates, visual } of entities) {
             if (!coordinates || !visual) {
@@ -87,6 +90,12 @@ class TetrisScene extends GameScene {
 
             const value = tiles[cy][cx];
             visual.setSprite(value ? atlas.sprites.PIECE : atlas.sprites.TILE);
+
+            if (animation && animation.rows.includes(cy)) {
+                setColorAlpha(visual.color, 1 - progress);
+            } else {
+                setColorAlpha(visual.color, 1.0);
+            }
         }
     }
 
