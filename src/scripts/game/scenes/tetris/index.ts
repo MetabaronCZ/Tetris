@@ -2,11 +2,11 @@ import Input from 'engine/input';
 import { createCamera } from 'engine/ecs/camera';
 
 import atlasDefinition from 'game/data/atlas';
+import { GRID_WIDTH, GRID_HEIGHT } from 'game/config';
 
 import GameAtlas from 'game/atlas';
 import Grid from 'game/scenes/tetris/grid';
 import GameScene, { GameSceneConf } from 'game/scene';
-import { GRID_WIDTH, GRID_HEIGHT } from 'game/config';
 import { Tile, createTile } from 'game/ecs/entites/tile-entity';
 
 const SPRITE_SIZE = 1;

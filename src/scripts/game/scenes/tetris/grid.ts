@@ -92,7 +92,7 @@ class Grid {
             return;
         }
         this.piece = null;
-        // this.handleRows();
+        this.handleRows();
     }
 
     public rotate(): void {
@@ -159,7 +159,6 @@ class Grid {
         this.piece = piece;
     }
 
-    /*
     private handleRows(): void {
         // remove filled rows
         this.tiles = this.tiles.filter(row => row.includes(0));
@@ -176,7 +175,6 @@ class Grid {
             removed--;
         }
     }
-    */
 
     private replacePiece(newPiece: Piece): boolean {
         const { piece, tiles } = this;
