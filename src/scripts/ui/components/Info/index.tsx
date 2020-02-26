@@ -2,11 +2,14 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { GUIState } from 'ui/store';
-import { InfoState } from 'ui/components/info/reducers';
 
-type Props = InfoState;
+interface Props {
+    readonly score: number;
+    readonly removed: number;
+    readonly speed: number;
+}
 
-const mapStateToProps = (state: GUIState): InfoState => ({
+const mapStateToProps = (state: GUIState): Props => ({
     score: state.info.score,
     removed: state.info.removed,
     speed: state.info.speed

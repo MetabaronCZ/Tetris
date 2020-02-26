@@ -14,8 +14,6 @@ import { Tile, createTile } from 'game/ecs/entites/tile-entity';
 const OFF_LEFT = (SPRITE_SIZE * GRID_WIDTH - 1) / 2;
 const OFF_TOP = (SPRITE_SIZE * GRID_HEIGHT - 1) / 2;
 
-export type Phase = 'INTRO' | 'GAME' | 'PAUSED' | 'SUMMARY';
-
 const createWorld = (): GameSceneConf => {
     const atlas = new GameAtlas(atlasDefinition);
 
@@ -44,7 +42,6 @@ const createWorld = (): GameSceneConf => {
 
 class TetrisScene extends GameScene {
     private readonly grid: Grid;
-    private phase: Phase = 'INTRO';
 
     constructor() {
         super(createWorld());
@@ -52,78 +49,55 @@ class TetrisScene extends GameScene {
     }
 
     public handleInput(input: Input): void {
-        const { phase, grid } = this;
+        const { grid } = this;
 
-        switch (phase) {
-            case 'INTRO':
-            case 'SUMMARY':
-                if (input.isKeyDown('SPACE')) {
-                    this.phase = 'GAME';
-                    grid.start();
-                }
-                break;
-
-            case 'GAME':
-                if (input.isKeyDown('ESC')) {
-                    this.phase = 'PAUSED';
-                    grid.pause();
-                } else if (input.isKeyDown('LEFT')) {
-                    grid.moveLeft();
-                } else if (input.isKeyDown('RIGHT')) {
-                    grid.moveRight();
-                } else if (input.isKeyPressed('DOWN')) {
-                    grid.moveDown();
-                } else if (input.isKeyDown('UP')) {
-                    grid.rotate();
-                }
-                break;
-
-            case 'PAUSED':
-                if (input.isKeyDown('ESC')) {
-                    this.phase = 'GAME';
-                    grid.pause();
-                }
-                break;
-
-            default:
-                // do nothing
+        if (input.isKeyDown('SPACE')) {
+            grid.start();
+        } else if (input.isKeyDown('ESC')) {
+            grid.pause();
+        } else if (input.isKeyDown('LEFT')) {
+            grid.moveLeft();
+        } else if (input.isKeyDown('RIGHT')) {
+            grid.moveRight();
+        } else if (input.isKeyPressed('DOWN')) {
+            grid.moveDown();
+        } else if (input.isKeyDown('UP')) {
+            grid.rotate();
         }
     }
 
     public update(): void {
-        const { phase, grid, textures, entities } = this;
+        const { grid, textures, entities } = this;
 
-        if ('GAME' === phase) {
-            if (grid.isGameOver()) {
-                this.phase = 'SUMMARY';
-                return;
+        grid.step();
+
+        const tiles = grid.getTiles();
+
+        if (!tiles.length) {
+            return;
+        }
+        const atlas = textures[0];
+
+        for (const { coordinates, visual } of entities) {
+            if (!coordinates || !visual) {
+                continue;
             }
-            grid.step();
+            const cx = coordinates.x;
+            const cy = coordinates.y;
 
-            const tiles = grid.getTiles();
-            const atlas = textures[0];
-
-            for (const { coordinates, visual } of entities) {
-                if (!coordinates || !visual) {
-                    continue;
-                }
-                const cx = coordinates.x;
-                const cy = coordinates.y;
-
-                const value = tiles[cy][cx];
-                visual.setSprite(value ? atlas.sprites.PIECE : atlas.sprites.TILE);
-            }
+            const value = tiles[cy][cx];
+            visual.setSprite(value ? atlas.sprites.PIECE : atlas.sprites.TILE);
         }
     }
 
     public renderGUI(gui: GUI): void {
-        const { phase, grid } = this;
+        const { grid } = this;
+        const phase = grid.getPhase();
+        const paused = grid.isPaused();
         const score = grid.getScore();
         const removed = grid.getRemoved();
         const speed = grid.getSpeed();
-
-        gui.phase.set(phase);
-        gui.info.set(score, removed, speed);
+        gui.info.set(phase, paused, score, removed, speed);
     }
 }
 

@@ -11,7 +11,7 @@ const Summary: React.SFC<Props> = ({ score }) => (
         SCORE: {score}
         <br />
         <br />
-        Press <strong>SPACE</strong> to start new game
+        Press <strong>SPACE</strong> to continue...
     </div>
 );
 

@@ -5,7 +5,7 @@ import { GUIActions } from 'ui/actions';
 import { InfoState } from 'ui/components/info/reducers';
 import { DebugState } from 'ui/components/debug/reducers';
 
-import { Phase } from 'game/scenes/tetris';
+import { Phase } from 'game/scenes/tetris/grid';
 
 export interface GUIState {
     readonly debug: DebugState;

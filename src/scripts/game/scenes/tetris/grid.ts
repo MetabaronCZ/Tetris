@@ -4,6 +4,7 @@ import {
     Piece, createPiece, checkPiece, placePiece, clearPiece
 } from 'game/scenes/tetris/piece';
 
+export type Phase = 'INIT' | 'RUNNING' | 'ANIMATING' | 'GAME_OVER';
 export type TileValue = 0 | 1;
 export type GridTiles = TileValue[][];
 
@@ -13,12 +14,11 @@ class Grid {
     private readonly width: number;
     private readonly height: number;
 
+    private phase: Phase = 'INIT';
     private piece: Piece | null = null;
     private tiles: GridTiles = [];
 
-    private running = false;
     private paused = false;
-    private gameOver = false;
 
     private removed = 0; // number of removed rows
     private score = 0; // player score
@@ -33,8 +33,12 @@ class Grid {
         this.maxStep = getMaxStep(this.speed);
     }
 
-    public isGameOver(): boolean {
-        return this.gameOver;
+    public isPaused(): boolean {
+        return this.paused;
+    }
+
+    public getPhase(): Phase {
+        return this.phase;
     }
 
     public getScore(): number {
@@ -54,13 +58,14 @@ class Grid {
     }
 
     public start(): void {
-        if (this.running) {
-            throw new Error('Game already running');
+        const { phase } = this;
+
+        if ('INIT' !== phase && 'GAME_OVER' !== phase) {
+            return;
         }
         this.generateGrid();
 
-        this.gameOver = false;
-        this.running = true;
+        this.phase = ('INIT' === phase ? 'RUNNING' : 'INIT');
         this.paused = false;
         this.piece = null;
         this.score = 0;
@@ -71,13 +76,17 @@ class Grid {
     }
 
     public pause(): void {
-        this.paused = !this.paused;
+        const { phase } = this;
+
+        if ('RUNNING' === phase || 'ANIMATING' === phase) {
+            this.paused = !this.paused;
+        }
     }
 
     public moveLeft(): void {
-        const { running, paused, piece } = this;
+        const { piece } = this;
 
-        if (!running || !piece || paused) {
+        if (!this.canAct() || !piece) {
             return;
         }
         const newPiece: Piece = { ...piece };
@@ -87,9 +96,9 @@ class Grid {
     }
 
     public moveRight(): void {
-        const { running, paused, piece } = this;
+        const { piece } = this;
 
-        if (!running || !piece || paused) {
+        if (!this.canAct() || !piece) {
             return;
         }
         const newPiece: Piece = { ...piece };
@@ -99,9 +108,9 @@ class Grid {
     }
 
     public moveDown(): void {
-        const { running, paused, piece } = this;
+        const { piece } = this;
 
-        if (!running || !piece || paused) {
+        if (!this.canAct() || !piece) {
             return;
         }
         const newPiece: Piece = { ...piece };
@@ -115,9 +124,9 @@ class Grid {
     }
 
     public rotate(): void {
-        const { running, paused, piece } = this;
+        const { piece } = this;
 
-        if (!running || !piece || paused) {
+        if (!this.canAct() || !piece) {
             return;
         }
         const newPiece: Piece = { ...piece };
@@ -128,17 +137,19 @@ class Grid {
     }
 
     public step(): void {
-        if (!this.running || this.paused) {
+        const { phase, piece, maxStep } = this;
+
+        if ('RUNNING' !== phase || this.paused) {
             return;
         }
         this.stepCount++;
 
-        if (this.stepCount < this.maxStep) {
+        if (this.stepCount < maxStep) {
             return;
         }
         this.stepCount = 0;
 
-        if (this.piece) {
+        if (piece) {
             this.moveDown();
             return;
         }
@@ -146,10 +157,14 @@ class Grid {
 
         if (!this.piece) {
             // force game over
-            this.gameOver = true;
-            this.running = false;
+            this.phase = 'GAME_OVER';
             return;
         }
+    }
+
+    private canAct(): boolean {
+        const { phase, paused } = this;
+        return 'RUNNING' === phase && !paused;
     }
 
     private generateGrid(): void {

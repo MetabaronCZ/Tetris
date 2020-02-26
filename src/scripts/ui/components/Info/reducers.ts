@@ -1,12 +1,17 @@
 import { InfoActions } from 'ui/components/info/actions';
+import { Phase } from 'game/scenes/tetris/grid';
 
 export interface InfoState {
+    readonly phase: Phase;
+    readonly paused: boolean;
     readonly score: number;
     readonly removed: number;
     readonly speed: number;
 }
 
 export const initialState: InfoState = {
+    phase: 'INIT',
+    paused: false,
     score: 0,
     removed: 0,
     speed: 0
