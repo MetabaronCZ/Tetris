@@ -56,6 +56,7 @@ class TetrisScene extends GameScene {
 
         switch (phase) {
             case 'INTRO':
+            case 'SUMMARY':
                 if (input.isKeyDown('SPACE')) {
                     this.phase = 'GAME';
                     grid.start();

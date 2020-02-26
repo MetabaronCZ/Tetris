@@ -65,7 +65,9 @@ class Grid {
         this.piece = null;
         this.score = 0;
         this.removed = 0;
+        this.speed = 0;
         this.stepCount = 0;
+        this.maxStep = getMaxStep(this.speed);
     }
 
     public pause(): void {
