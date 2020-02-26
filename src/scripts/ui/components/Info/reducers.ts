@@ -9,7 +9,7 @@ export interface InfoState {
 export const initialState: InfoState = {
     score: 0,
     removed: 0,
-    speed: 1
+    speed: 0
 };
 
 export const infoReducer = (state = initialState, action: InfoActions): InfoState => {

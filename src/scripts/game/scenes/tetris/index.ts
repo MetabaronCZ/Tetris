@@ -120,7 +120,6 @@ class TetrisScene extends GameScene {
 
     private stop(): void {
         this.phase = 'SUMMARY';
-        console.log('GAME OVER');
     }
 }
 

@@ -5,6 +5,20 @@ import {
 export type TileValue = 0 | 1;
 export type GridTiles = TileValue[][];
 
+const getScore = (speed: number, removed: number): number => {
+    let base = 0;
+
+    switch (removed) {
+        case 1: base = 40; break;
+        case 2: base = 100; break;
+        case 3: base = 300; break;
+        case 4: base = 1200; break;
+        default:
+            throw new Error('Invalid removed row count: ' + removed);
+    }
+    return base * (speed + 1);
+};
+
 class Grid {
     private readonly width: number;
     private readonly height: number;
@@ -14,7 +28,7 @@ class Grid {
 
     private removed = 0; // number of removed rows
     private score = 0; // player score
-    private speed = 1; // game speed
+    private speed = 0; // game speed
     private running = false;
     private gameOver = false;
 
@@ -193,15 +207,20 @@ class Grid {
 
         // update game info
         let removed = this.height - this.tiles.length;
-        this.removed += removed;
-        this.score += 40 * removed;
-        this.speed = Math.floor(this.removed / 10) + 1;
 
-        // put back removed rows
-        while (removed) {
-            const row = this.createRow();
-            this.tiles.unshift(row);
-            removed--;
+        if (removed > 0) {
+            const score = getScore(this.speed, removed);
+
+            this.removed += removed;
+            this.score += score;
+            this.speed = Math.floor(this.removed / 10);
+    
+            // put back removed rows
+            while (removed) {
+                const row = this.createRow();
+                this.tiles.unshift(row);
+                removed--;
+            }
         }
     }
 }
