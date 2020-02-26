@@ -63,7 +63,7 @@ class TetrisScene extends GameScene {
                     this.grid.moveLeft();
                 } else if (input.isKeyDown('RIGHT')) {
                     this.grid.moveRight();
-                } else if (input.isKeyDown('DOWN')) {
+                } else if (input.isKeyPressed('DOWN')) {
                     this.grid.moveDown();
                 } else if (input.isKeyDown('UP')) {
                     this.grid.rotate();
