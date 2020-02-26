@@ -1,0 +1,14 @@
+{
+	"extends": "stylelint-config-sass-guidelines",
+	"plugins": [
+		"stylelint-scss"
+	],
+	"rules": {
+		"indentation": 4,
+		"string-quotes": "double",
+		"max-nesting-depth": null,
+		"selector-class-pattern": null,
+		"color-named": null,
+		"order/properties-alphabetical-order": null,
+	}
+}

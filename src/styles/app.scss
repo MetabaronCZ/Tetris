@@ -1,0 +1,12 @@
+@import "../../node_modules/normalize-scss/sass/normalize";
+
+@import "general";
+@import "variables";
+@import "utility";
+
+// components
+@import "components/Container";
+@import "components/Canvas";
+
+@import "components/GUI";
+@import "components/Debug";

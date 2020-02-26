@@ -1,0 +1,22 @@
+{
+	"compilerOptions": {
+		"target": "es5",
+		"module": "esnext",
+		"moduleResolution": "node",
+		"importHelpers": true, // importing helper functions from tslib
+		"noEmitHelpers": true, // disable emitting inline helper functions
+		"experimentalDecorators": true, // alow ES7 decorators
+		"esModuleInterop": true,
+		"removeComments": true,
+		"baseUrl": "./src/scripts",
+		"sourceMap": true,
+		"jsx": "react",
+		"lib": ["es6", "dom", "webworker"],
+		"pretty": true,
+		"strict": true,
+		"noImplicitReturns": true,
+		"noUnusedLocals": true,
+	},
+	"compileOnSave": false,
+	"exclude": ["node_modules", "dist"]
+}

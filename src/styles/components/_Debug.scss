@@ -1,0 +1,16 @@
+.Debug {
+    display: inline-table;
+    margin: 2 * $vu;
+    background: rgba(255, 255, 255, 0.7);
+
+    &-row {
+        display: table-row;
+    }
+
+    &-column {
+        display: table-cell;
+        padding-right: $vu;
+        font-family: monospace;
+        font-size: 12px;
+    }
+}
