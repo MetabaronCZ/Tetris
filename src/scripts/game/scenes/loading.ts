@@ -17,6 +17,10 @@ class LoadingScene extends GameScene {
     public update(): void {
         // do nothing
     }
+
+    public renderGUI(): void {
+        // do nothing
+    }
 }
 
 export default LoadingScene;

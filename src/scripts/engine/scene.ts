@@ -1,3 +1,5 @@
+import { GUI } from 'ui';
+
 import Input from 'engine/input';
 import { Camera } from 'engine/ecs/camera';
 import { Entity } from 'engine/ecs/entity';
@@ -35,7 +37,7 @@ abstract class Scene<T extends string, U extends ComponentMap<T>, V extends Spri
     abstract handleInput(input: Input): void;
     abstract update(): void;
 
-    abstract render(renderer: Renderer): void;
+    abstract render(renderer: Renderer, gui: GUI): void;
 }
 
 export default Scene;

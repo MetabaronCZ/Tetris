@@ -14,6 +14,7 @@ class Grid {
 
     private removed = 0; // number of removed rows
     private score = 0; // player score
+    private speed = 1; // game speed
     private running = false;
     private gameOver = false;
 
@@ -35,6 +36,10 @@ class Grid {
 
     public getRemoved(): number {
         return this.removed;
+    }
+
+    public getSpeed(): number {
+        return this.speed;
     }
 
     public getTiles(): GridTiles {
@@ -159,23 +164,6 @@ class Grid {
         this.piece = piece;
     }
 
-    private handleRows(): void {
-        // remove filled rows
-        this.tiles = this.tiles.filter(row => row.includes(0));
-
-        // update score
-        let removed = this.height - this.tiles.length;
-        this.removed += removed;
-        this.score += 40 * removed;
-
-        // put back removed rows
-        while (removed) {
-            const row = this.createRow();
-            this.tiles.unshift(row);
-            removed--;
-        }
-    }
-
     private replacePiece(newPiece: Piece): boolean {
         const { piece, tiles } = this;
 
@@ -196,6 +184,24 @@ class Grid {
                 placePiece(piece, tiles);
             }
             return false;
+        }
+    }
+
+    private handleRows(): void {
+        // remove filled rows
+        this.tiles = this.tiles.filter(row => row.includes(0));
+
+        // update game info
+        let removed = this.height - this.tiles.length;
+        this.removed += removed;
+        this.score += 40 * removed;
+        this.speed = Math.floor(this.removed / 10) + 1;
+
+        // put back removed rows
+        while (removed) {
+            const row = this.createRow();
+            this.tiles.unshift(row);
+            removed--;
         }
     }
 }

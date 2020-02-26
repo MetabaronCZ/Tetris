@@ -1,3 +1,5 @@
+import { GUI } from 'ui';
+
 import Input from 'engine/input';
 import { createCamera } from 'engine/ecs/camera';
 
@@ -10,10 +12,10 @@ import GameScene, { GameSceneConf } from 'game/scene';
 import { Tile, createTile } from 'game/ecs/entites/tile-entity';
 
 const SPRITE_SIZE = 1;
-const OFF_LEFT = GRID_WIDTH / 2;
-const OFF_TOP = GRID_HEIGHT / 2;
+const OFF_LEFT = (SPRITE_SIZE * GRID_WIDTH - 1) / 2;
+const OFF_TOP = (SPRITE_SIZE * GRID_HEIGHT - 1) / 2;
 
-type Phase = 'INTRO' | 'GAME' | 'SUMMARY';
+export type Phase = 'INTRO' | 'GAME' | 'SUMMARY';
 
 const createWorld = (): GameSceneConf => {
     const atlas = new GameAtlas(atlasDefinition);
@@ -99,6 +101,16 @@ class TetrisScene extends GameScene {
                 visual.setSprite(value ? atlas.sprites.PIECE : atlas.sprites.TILE);
             }
         }
+    }
+
+    public renderGUI(gui: GUI): void {
+        const { phase, grid } = this;
+        const score = grid.getScore();
+        const removed = grid.getRemoved();
+        const speed = grid.getSpeed();
+
+        gui.phase.set(phase);
+        gui.info.set(score, removed, speed);
     }
 
     private start(): void {

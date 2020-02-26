@@ -17,6 +17,7 @@ import EmptyCounter from 'engine/debug/empty';
 import UpdateCounter from 'engine/debug/update';
 
 class Game<T extends string, U extends ComponentMap<T>, V extends SpriteAtlas<any>> {
+    private readonly gui: GUI;
     private readonly input: Input;
     private readonly renderer: Renderer;
     private readonly counter: StatCounter;
@@ -31,6 +32,7 @@ class Game<T extends string, U extends ComponentMap<T>, V extends SpriteAtlas<an
         const view = createView(RENDER_WIDTH, RENDER_HEIGHT);
         this.renderer = new Renderer(canvas, view);
         this.input = new Input(view);
+        this.gui = gui;
 
         if (DEBUG_COUNTER) {
             this.counter = new UpdateCounter(gui.debug.set);
@@ -95,10 +97,9 @@ class Game<T extends string, U extends ComponentMap<T>, V extends SpriteAtlas<an
     }
 
     private render(): void {
-        const { renderer, currentScene } = this;
-
+        const { gui, renderer, currentScene } = this;
         this.counter.renderStart();
-        currentScene.render(renderer);
+        currentScene.render(renderer, gui);
         this.counter.renderEnd();
     }
 

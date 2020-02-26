@@ -1,5 +1,7 @@
 import { DEBUG_SPRITE } from 'data/config';
 
+import { GUI } from 'ui';
+
 import Scene, { SceneConf } from 'engine/scene';
 import { Vector2D } from 'engine/geometry/vector';
 import Renderer, { SpriteRenderData, OutlineRenderData } from 'engine/graphics/renderer';
@@ -10,7 +12,9 @@ import { ComponentID, CMap } from 'game/ecs';
 export type GameSceneConf = SceneConf<ComponentID, CMap, GameAtlas>;
 
 abstract class GameScene extends Scene<ComponentID, CMap, GameAtlas> {
-    public render(renderer: Renderer): void {
+    abstract renderGUI(gui: GUI): void;
+
+    public render(renderer: Renderer, gui: GUI): void {
         const { camera } = this;
         const points: Vector2D[] = [];
         const sprites: SpriteRenderData[] = [];
@@ -61,6 +65,8 @@ abstract class GameScene extends Scene<ComponentID, CMap, GameAtlas> {
         if (points.length) {
             renderer.renderPointData(points, camera);
         }
+
+        this.renderGUI(gui);
     }
 }
 
