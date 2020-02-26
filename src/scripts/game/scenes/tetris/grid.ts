@@ -20,6 +20,7 @@ class Grid {
     private paused = false;
 
     private animation: TileAnimation | null = null;
+    private nextPiece: Piece | null = null;
     private piece: Piece | null = null;
     private tiles: GridTiles = [];
 
@@ -60,6 +61,10 @@ class Grid {
         return this.tiles;
     }
 
+    public getNextPiece(): Piece | null {
+        return this.nextPiece;
+    }
+
     public getAnimation(): TileAnimation | null {
         return this.animation;
     }
@@ -75,6 +80,7 @@ class Grid {
         this.phase = ('INIT' === phase ? 'RUNNING' : 'INIT');
         this.paused = false;
         this.piece = null;
+        this.nextPiece = null;
         this.score = 0;
         this.removed = 0;
         this.speed = 0;
@@ -207,15 +213,17 @@ class Grid {
 
     private addPiece(): void {
         this.piece = null;
+        this.nextPiece = this.nextPiece || createPiece();
 
-        const { tiles } = this;
-        const piece = createPiece();
+        const { tiles, nextPiece } = this;
 
-        if (!checkPiece(piece, tiles)) {
+        if (!checkPiece(nextPiece, tiles)) {
             return;
         }
-        placePiece(piece, tiles);
-        this.piece = piece;
+        placePiece(nextPiece, tiles);
+
+        this.piece = nextPiece;
+        this.nextPiece = createPiece();
     }
 
     private replacePiece(newPiece: Piece): boolean {

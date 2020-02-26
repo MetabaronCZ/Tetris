@@ -27,8 +27,8 @@ export interface Piece {
     rot: number;
 }
 
-export const createPiece = (): Piece => {
-    const type = getRandomArrayItem(pieceTypes);
+export const createPiece = (type?: PieceType): Piece => {
+    type = type || getRandomArrayItem(pieceTypes);
     return {
         type,
         rot: 0,
