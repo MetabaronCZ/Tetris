@@ -1,7 +1,9 @@
-import { Piece, createPiece, checkPiece, placePiece, clearPiece } from 'game/scenes/tetris/piece';
+import {
+    Piece, createPiece, checkPiece, placePiece, clearPiece
+} from 'game/scenes/tetris/piece';
 
 export type TileValue = 0 | 1;
-export type GridTiles = TileValue[][]
+export type GridTiles = TileValue[][];
 
 class Grid {
     private readonly width: number;
@@ -54,7 +56,7 @@ class Grid {
     }
 
     public moveLeft(): void {
-        const { running, piece, tiles } = this;
+        const { running, piece } = this;
 
         if (!running || !piece) {
             return;
@@ -62,13 +64,11 @@ class Grid {
         const newPiece: Piece = { ...piece };
         newPiece.x--;
 
-        if (checkPiece(newPiece, tiles)) {
-            this.replacePiece(newPiece);
-        }
+        this.replacePiece(newPiece);
     }
 
     public moveRight(): void {
-        const { running, piece, tiles } = this;
+        const { running, piece } = this;
 
         if (!running || !piece) {
             return;
@@ -76,13 +76,11 @@ class Grid {
         const newPiece: Piece = { ...piece };
         newPiece.x++;
 
-        if (checkPiece(newPiece, tiles)) {
-            this.replacePiece(newPiece);
-        }
+        this.replacePiece(newPiece);
     }
 
     public moveDown(): void {
-        const { running, piece, tiles } = this;
+        const { running, piece } = this;
 
         if (!running || !piece) {
             return;
@@ -90,16 +88,15 @@ class Grid {
         const newPiece: Piece = { ...piece };
         newPiece.y++;
 
-        if (checkPiece(newPiece, tiles)) {
-            this.replacePiece(newPiece);
+        if (this.replacePiece(newPiece)) {
             return;
         }
         this.piece = null;
-        this.handleRows();
+        // this.handleRows();
     }
 
     public rotate(): void {
-        const { running, piece, tiles } = this;
+        const { running, piece } = this;
 
         if (!running || !piece) {
             return;
@@ -108,9 +105,7 @@ class Grid {
         newPiece.rot += 1;
         newPiece.rot /= piece.variants;
 
-        if (checkPiece(newPiece, tiles)) {
-            this.replacePiece(newPiece);
-        }
+        this.replacePiece(newPiece);
     }
 
     public step(): void {
@@ -164,6 +159,7 @@ class Grid {
         this.piece = piece;
     }
 
+    /*
     private handleRows(): void {
         // remove filled rows
         this.tiles = this.tiles.filter(row => row.includes(0));
@@ -180,14 +176,28 @@ class Grid {
             removed--;
         }
     }
+    */
 
-    private replacePiece(newPiece: Piece): void {
+    private replacePiece(newPiece: Piece): boolean {
         const { piece, tiles } = this;
 
+        // clear actual piece (prevent actual vs new piece collision)
         if (piece) {
             clearPiece(piece, tiles);
+        }
+
+        if (checkPiece(newPiece, tiles)) {
+            // place new piece
             placePiece(newPiece, tiles);
             this.piece = newPiece;
+            return true;
+
+        } else {
+            // return actual piece (if exists)
+            if (piece) {
+                placePiece(piece, tiles);
+            }
+            return false;
         }
     }
 }

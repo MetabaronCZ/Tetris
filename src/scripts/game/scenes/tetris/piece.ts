@@ -1,6 +1,6 @@
 import { getRandomArrayItem } from 'core/array';
 
-import { GRID_WIDTH/*, GRID_HEIGHT*/ } from 'game/config';
+import { GRID_WIDTH, GRID_HEIGHT } from 'game/config';
 
 import pieces from 'game/data/pieces';
 import { GridTiles } from 'game/scenes/tetris/grid';
@@ -39,7 +39,6 @@ export const createPiece = (): Piece => {
 };
 
 export const checkPiece = (piece: Piece, grid: GridTiles): boolean => {
-    /*
     const pTiles = pieces[piece.type][piece.rot];
 
     for (let y = 0; y < 4; y++) {
@@ -47,20 +46,22 @@ export const checkPiece = (piece: Piece, grid: GridTiles): boolean => {
             const px = piece.x + x;
             const py = piece.y + y;
 
+            // check only solid parts of the piece
+            if (!pTiles[y][x]) {
+                continue;
+            }
+
             // check out of grid
-            if (px < 0 || px > GRID_WIDTH - 1 || py < initialY || py > GRID_HEIGHT - 4) {
+            if (px < 0 || px > GRID_WIDTH - 1 || py < initialY || py > GRID_HEIGHT - 1) {
                 return false;
             }
 
             // check collission
-            if (pTiles[x][y] && grid[px][py]) {
+            if (grid[py][px]) {
                 return false;
             }
         }
     }
-    */
-    piece;
-    grid;
     return true;
 };
 
@@ -69,9 +70,12 @@ export const placePiece = (piece: Piece, grid: GridTiles): void => {
 
     for (let y = 0; y < 4; y++) {
         for (let x = 0; x < 4; x++) {
-            if (piece.y + y >= 0) {
-                grid[piece.y + y][piece.x + x] = pTiles[y][x];
+            const value = pTiles[y][x];
+
+            if (!value) {
+                continue;
             }
+            grid[piece.y + y][piece.x + x] = value;
         }
     }
 };
