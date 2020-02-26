@@ -103,7 +103,7 @@ class Grid {
         }
         const newPiece: Piece = { ...piece };
         newPiece.rot += 1;
-        newPiece.rot /= piece.variants;
+        newPiece.rot %= piece.variants;
 
         this.replacePiece(newPiece);
     }

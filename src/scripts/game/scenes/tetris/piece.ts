@@ -57,7 +57,7 @@ export const checkPiece = (piece: Piece, grid: GridTiles): boolean => {
             }
 
             // check collission
-            if (grid[py][px]) {
+            if (py >= 0 && grid[py][px]) {
                 return false;
             }
         }
@@ -71,11 +71,16 @@ export const placePiece = (piece: Piece, grid: GridTiles): void => {
     for (let y = 0; y < 4; y++) {
         for (let x = 0; x < 4; x++) {
             const value = pTiles[y][x];
+            const px = piece.x + x;
+            const py = piece.y + y;
 
             if (!value) {
                 continue;
             }
-            grid[piece.y + y][piece.x + x] = value;
+
+            if (py >= 0) {
+                grid[py][px] = value;
+            }
         }
     }
 };
