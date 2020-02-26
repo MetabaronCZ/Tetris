@@ -1,4 +1,4 @@
-const keyIDs = ['UP', 'DOWN', 'LEFT', 'RIGHT', 'SPACE'] as const;
+const keyIDs = ['ESC', 'ENTER', 'SPACE', 'UP', 'DOWN', 'LEFT', 'RIGHT'] as const;
 export type KeyID = typeof keyIDs[number];
 
 interface KeyTable {
@@ -6,6 +6,8 @@ interface KeyTable {
 }
 
 const keyTable: KeyTable = {
+    13: 'ENTER',
+    27: 'ESC',
     32: 'SPACE',
     37: 'LEFT',
     38: 'UP',

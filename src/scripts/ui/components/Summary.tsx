@@ -6,7 +6,7 @@ interface Props {
 
 const Summary: React.SFC<Props> = ({ score }) => (
     <div className="Info">
-        <strong>GAME OVER!</strong>
+        <strong>- GAME OVER -</strong>
         <br />
         SCORE: {score}
     </div>

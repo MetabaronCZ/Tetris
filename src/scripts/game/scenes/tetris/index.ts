@@ -14,7 +14,7 @@ import { Tile, createTile } from 'game/ecs/entites/tile-entity';
 const OFF_LEFT = (SPRITE_SIZE * GRID_WIDTH - 1) / 2;
 const OFF_TOP = (SPRITE_SIZE * GRID_HEIGHT - 1) / 2;
 
-export type Phase = 'INTRO' | 'GAME' | 'SUMMARY';
+export type Phase = 'INTRO' | 'GAME' | 'PAUSED' | 'SUMMARY';
 
 const createWorld = (): GameSceneConf => {
     const atlas = new GameAtlas(atlasDefinition);
@@ -52,22 +52,35 @@ class TetrisScene extends GameScene {
     }
 
     public handleInput(input: Input): void {
-        switch (this.phase) {
+        const { phase, grid } = this;
+
+        switch (phase) {
             case 'INTRO':
                 if (input.isKeyDown('SPACE')) {
-                    this.start();
+                    this.phase = 'GAME';
+                    grid.start();
                 }
                 break;
 
             case 'GAME':
-                if (input.isKeyDown('LEFT')) {
-                    this.grid.moveLeft();
+                if (input.isKeyDown('ESC')) {
+                    this.phase = 'PAUSED';
+                    grid.pause();
+                } else if (input.isKeyDown('LEFT')) {
+                    grid.moveLeft();
                 } else if (input.isKeyDown('RIGHT')) {
-                    this.grid.moveRight();
+                    grid.moveRight();
                 } else if (input.isKeyPressed('DOWN')) {
-                    this.grid.moveDown();
+                    grid.moveDown();
                 } else if (input.isKeyDown('UP')) {
-                    this.grid.rotate();
+                    grid.rotate();
+                }
+                break;
+
+            case 'PAUSED':
+                if (input.isKeyDown('ESC')) {
+                    this.phase = 'GAME';
+                    grid.pause();
                 }
                 break;
 
@@ -81,7 +94,7 @@ class TetrisScene extends GameScene {
 
         if ('GAME' === phase) {
             if (grid.isGameOver()) {
-                this.stop();
+                this.phase = 'SUMMARY';
                 return;
             }
             grid.step();
@@ -110,15 +123,6 @@ class TetrisScene extends GameScene {
 
         gui.phase.set(phase);
         gui.info.set(score, removed, speed);
-    }
-
-    private start(): void {
-        this.phase = 'GAME';
-        this.grid.start();
-    }
-
-    private stop(): void {
-        this.phase = 'SUMMARY';
     }
 }
 

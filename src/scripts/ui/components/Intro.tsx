@@ -2,13 +2,11 @@ import React from 'react';
 
 const Intro: React.SFC = () => (
     <div className="Info">
-        Press <strong>←</strong> to move piece left
-        <br />
-        Press <strong>→</strong> to move piece right
-        <br />
-        Press <strong>↓</strong> to move piece down
+        Press <strong>←</strong>, <strong>→</strong>, <strong>↓</strong> to move piece
         <br />
         Press <strong>↑</strong> to rotate piece
+        <br />
+        Press <strong>ESCAPE</strong> to pause game
         <br />
         <br />
         Press <strong>SPACE</strong> to start new game

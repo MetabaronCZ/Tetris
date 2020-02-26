@@ -17,6 +17,7 @@ class Grid {
     private tiles: GridTiles = [];
 
     private running = false;
+    private paused = false;
     private gameOver = false;
 
     private removed = 0; // number of removed rows
@@ -60,16 +61,21 @@ class Grid {
 
         this.gameOver = false;
         this.running = true;
+        this.paused = false;
         this.piece = null;
         this.score = 0;
         this.removed = 0;
         this.stepCount = 0;
     }
 
-    public moveLeft(): void {
-        const { running, piece } = this;
+    public pause(): void {
+        this.paused = !this.paused;
+    }
 
-        if (!running || !piece) {
+    public moveLeft(): void {
+        const { running, paused, piece } = this;
+
+        if (!running || !piece || paused) {
             return;
         }
         const newPiece: Piece = { ...piece };
@@ -79,9 +85,9 @@ class Grid {
     }
 
     public moveRight(): void {
-        const { running, piece } = this;
+        const { running, paused, piece } = this;
 
-        if (!running || !piece) {
+        if (!running || !piece || paused) {
             return;
         }
         const newPiece: Piece = { ...piece };
@@ -91,9 +97,9 @@ class Grid {
     }
 
     public moveDown(): void {
-        const { running, piece } = this;
+        const { running, paused, piece } = this;
 
-        if (!running || !piece) {
+        if (!running || !piece || paused) {
             return;
         }
         const newPiece: Piece = { ...piece };
@@ -107,9 +113,9 @@ class Grid {
     }
 
     public rotate(): void {
-        const { running, piece } = this;
+        const { running, paused, piece } = this;
 
-        if (!running || !piece) {
+        if (!running || !piece || paused) {
             return;
         }
         const newPiece: Piece = { ...piece };
@@ -120,7 +126,7 @@ class Grid {
     }
 
     public step(): void {
-        if (!this.running) {
+        if (!this.running || this.paused) {
             return;
         }
         this.stepCount++;

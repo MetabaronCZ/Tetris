@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { GUIState } from 'ui/store';
 import Info from 'ui/components/Info';
 import Intro from 'ui/components/Intro';
+import Paused from 'ui/components/Paused';
 import Summary from 'ui/components/Summary';
 
 import { Phase } from 'game/scenes/tetris';
@@ -22,6 +23,7 @@ const getContent = (phase: Phase, score: number): React.ReactNode => {
     switch (phase) {
         case 'INTRO':   return <Intro />;
         case 'GAME':    return <Info />;
+        case 'PAUSED':  return <Paused />;
         case 'SUMMARY': return <Summary score={score} />;
         default:        return null;
     }
