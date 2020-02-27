@@ -13,9 +13,14 @@ export interface GUI {
     };
 }
 
-export const initGUI = <T extends {}>(root: HTMLDivElement, api: (store: GUIStore) => T): GUI & T => {
+export const initGUI = <T extends {}>(root: HTMLDivElement, api: (store: GUIStore) => T, content: React.ReactNode): GUI & T => {
     const store = initStore();
-    render(<App store={store} />, root);
+    render(
+        <App store={store}>
+            {content}
+        </App>,
+        root
+    );
 
     // return GUI API
     return {
