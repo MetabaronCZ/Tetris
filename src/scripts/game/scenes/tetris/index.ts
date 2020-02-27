@@ -1,5 +1,3 @@
-import { GUI } from 'engine/ui';
-
 import Input from 'engine/input';
 import { createCamera } from 'engine/ecs/camera';
 import { setColorAlpha } from 'engine/graphics/color';
@@ -8,6 +6,7 @@ import pieces from 'game/data/pieces';
 import atlasDefinition from 'game/data/atlas';
 import { GRID_WIDTH, GRID_HEIGHT, SPRITE_SIZE } from 'game/config';
 
+import { GameGUI } from 'game/ui';
 import GameAtlas from 'game/atlas';
 import Grid from 'game/scenes/tetris/grid';
 import GameScene, { GameSceneConf } from 'game/scene';
@@ -133,7 +132,7 @@ class TetrisScene extends GameScene {
         }
     }
 
-    public renderGUI(gui: GUI): void {
+    public renderGUI(gui: GameGUI): void {
         const { grid } = this;
         const phase = grid.getPhase();
         const paused = grid.isPaused();
