@@ -1,8 +1,8 @@
 import React from 'react';
 
 import { GUI, initGUI } from 'engine/ui';
-
 import { GUIStore } from 'engine/ui/store';
+
 import Router from 'game/ui/components/Router';
 import { setInfo } from 'game/ui/components/Info/actions';
 
@@ -13,7 +13,6 @@ interface GameAPI {
         readonly set: (phase: Phase, paused: boolean, score: number, removed: number, speed: number) => void;
     };
 }
-export type GameGUI = GUI & GameAPI;
 
 const gameGUI = (store: GUIStore): GameAPI => ({
     info: {
@@ -22,6 +21,8 @@ const gameGUI = (store: GUIStore): GameAPI => ({
         }
     }
 });
+
+export type GameGUI = GUI & GameAPI;
 
 export const initGameGUI = (root: HTMLDivElement): GameGUI => {
     return initGUI(root, gameGUI, <Router />);
