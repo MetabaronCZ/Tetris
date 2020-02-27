@@ -1,5 +1,5 @@
-import { InfoActions } from 'ui/components/info/actions';
 import { Phase } from 'game/scenes/tetris/grid';
+import { InfoActions } from 'game/ui/components/info/actions';
 
 export interface InfoState {
     readonly phase: Phase;

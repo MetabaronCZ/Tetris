@@ -1,4 +1,4 @@
-import { DISTANCE_TO_PIXEL_RATIO } from 'data/config';
+import { DISTANCE_TO_PIXEL_RATIO } from 'engine/data/config';
 
 import { View } from 'engine/view';
 import { Camera } from 'engine/ecs/camera';

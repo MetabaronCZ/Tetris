@@ -1,7 +1,7 @@
 import {
     RENDER_SCALE, DISTANCE_TO_PIXEL_RATIO,
     DEBUG_SPRITE, DEBUG_POINT_SIZE, DEBUG_POINT_COLOR, DEBUG_OUTLINE_COLOR
-} from 'data/config';
+} from 'engine/data/config';
 
 import { Camera } from 'engine/ecs/camera';
 import { Color } from 'engine/graphics/color';

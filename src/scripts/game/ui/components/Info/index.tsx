@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { GUIState } from 'ui/store';
+import { GUIState } from 'engine/ui/store';
 
 interface Props {
     readonly score: number;

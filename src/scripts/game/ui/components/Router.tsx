@@ -1,11 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { GUIState } from 'ui/store';
-import Info from 'ui/components/Info';
-import Intro from 'ui/components/Intro';
-import Paused from 'ui/components/Paused';
-import Summary from 'ui/components/Summary';
+import { GUIState } from 'engine/ui/store';
+
+import Info from 'game/ui/components/Info';
+import Intro from 'game/ui/components/Intro';
+import Paused from 'game/ui/components/Paused';
+import Summary from 'game/ui/components/Summary';
 
 import { Phase } from 'game/scenes/tetris/grid';
 

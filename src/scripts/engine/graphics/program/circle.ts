@@ -1,4 +1,4 @@
-import { circleVS, circleFS } from 'data/shaders/circle';
+import { circleVS, circleFS } from 'engine/data/shaders/circle';
 import { createRenderProgram, UseProgram, RenderObject } from 'engine/graphics/program';
 
 type CircleAttributes = 'a_position' | 'a_texcoord' | 'a_ratio';

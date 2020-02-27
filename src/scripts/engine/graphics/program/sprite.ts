@@ -1,4 +1,4 @@
-import { spriteVS, spriteFS } from 'data/shaders/sprite';
+import { spriteVS, spriteFS } from 'engine/data/shaders/sprite';
 import { createRenderProgram, UseProgram, RenderObject } from 'engine/graphics/program';
 
 type SpriteAttributes = 'a_position' | 'a_texcoord' | 'a_color';

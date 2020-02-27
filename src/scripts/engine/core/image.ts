@@ -1,4 +1,4 @@
-import { PATH_IMAGES } from 'data/config';
+import { PATH_IMAGES } from 'engine/data/config';
 
 export const loadImage = (path: string, img = new Image()): Promise<HTMLImageElement> => {
     return new Promise<HTMLImageElement>((resolve, reject) => {

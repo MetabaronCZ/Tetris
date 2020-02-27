@@ -1,5 +1,5 @@
-import { GUIAction } from 'ui/actions';
-import { InfoState } from 'ui/components/info/reducers';
+import { GUIAction } from 'engine/ui/actions';
+import { InfoState } from 'game/ui/components/info/reducers';
 
 type SetInfo = GUIAction<'INFO', InfoState>;
 

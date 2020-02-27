@@ -1,4 +1,4 @@
-import { DebugState } from 'ui/components/debug/reducers';
+import { DebugState } from 'engine/ui/components/debug/reducers';
 
 export type OnUpdate = (info: DebugState) => void;
 

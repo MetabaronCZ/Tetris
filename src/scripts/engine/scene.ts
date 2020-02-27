@@ -1,4 +1,4 @@
-import { GUI } from 'ui';
+import { GUI } from 'engine/ui';
 
 import Input from 'engine/input';
 import { Camera } from 'engine/ecs/camera';

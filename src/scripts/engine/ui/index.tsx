@@ -1,14 +1,14 @@
 import React from 'react';
 import { render } from 'react-dom';
 
-import { initStore } from 'ui/store';
+import { initStore } from 'engine/ui/store';
 
-import App from 'ui/components/App';
-import { setInfo } from 'ui/components/Info/actions';
-import { setDebug } from 'ui/components/Debug/actions';
-import { DebugState } from 'ui/components/debug/reducers';
+import App from 'engine/ui/components/App';
+import { setDebug } from 'engine/ui/components/Debug/actions';
+import { DebugState } from 'engine/ui/components/debug/reducers';
 
 import { Phase } from 'game/scenes/tetris/grid';
+import { setInfo } from 'game/ui/components/Info/actions';
 
 export interface GUI {
     readonly debug: {

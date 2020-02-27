@@ -1,4 +1,4 @@
-import { RENDER_SCALE } from 'data/config';
+import { RENDER_SCALE } from 'engine/data/config';
 
 import { View } from 'engine/view';
 import { Vector2D } from 'engine/geometry/vector';

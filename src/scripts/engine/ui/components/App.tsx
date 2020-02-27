@@ -1,11 +1,11 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 
-import { DEBUG_COUNTER } from 'data/config';
+import { DEBUG_COUNTER } from 'engine/data/config';
 
-import { GUIStore } from 'ui/store';
-import Debug from 'ui/components/Debug';
-import Router from 'ui/components/Router';
+import { GUIStore } from 'engine/ui/store';
+import Debug from 'engine/ui/components/Debug';
+import Router from 'game/ui/components/Router';
 
 interface Props {
     readonly store: GUIStore;

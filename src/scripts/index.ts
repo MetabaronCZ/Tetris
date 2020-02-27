@@ -1,4 +1,4 @@
-import { initGUI } from 'ui';
+import { initGUI } from 'engine/ui';
 import Game from 'engine/game';
 
 import TetrisScene from 'game/scenes/tetris';

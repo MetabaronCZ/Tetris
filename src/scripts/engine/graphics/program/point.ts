@@ -1,4 +1,4 @@
-import { pointVS, pointFS } from 'data/shaders/point';
+import { pointVS, pointFS } from 'engine/data/shaders/point';
 import { createRenderProgram, UseProgram, RenderObject } from 'engine/graphics/program';
 
 type PointAttributes = 'a_position';

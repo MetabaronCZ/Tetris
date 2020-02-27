@@ -1,4 +1,4 @@
-import { rectangleVS, rectangleFS } from 'data/shaders/rectangle';
+import { rectangleVS, rectangleFS } from 'engine/data/shaders/rectangle';
 import { createRenderProgram, UseProgram, RenderObject } from 'engine/graphics/program';
 
 type RectangleAttributes = 'a_position' | 'a_texcoord' | 'a_ratio';

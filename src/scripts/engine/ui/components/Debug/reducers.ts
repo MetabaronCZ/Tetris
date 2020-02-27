@@ -1,4 +1,4 @@
-import { DebugActions } from 'ui/components/debug/actions';
+import { DebugActions } from 'engine/ui/components/debug/actions';
 
 export interface DebugState {
     readonly ups: {

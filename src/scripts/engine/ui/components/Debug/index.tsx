@@ -1,8 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { GUIState } from 'ui/store';
-import { DebugState } from 'ui/components/debug/reducers';
+import { GUIState } from 'engine/ui/store';
+import { DebugState } from 'engine/ui/components/debug/reducers';
 
 type Props = DebugState;
 

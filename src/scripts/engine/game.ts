@@ -1,9 +1,8 @@
 import {
-    RENDER_HEIGHT, RENDER_WIDTH,
-    DEBUG_COUNTER, UPDATE_TICK
-} from 'data/config';
+    RENDER_HEIGHT, RENDER_WIDTH, DEBUG_COUNTER, UPDATE_TICK
+} from 'engine/data/config';
 
-import { GUI } from 'ui';
+import { GUI } from 'engine/ui';
 
 import Input from 'engine/input';
 import Scene from 'engine/scene';

@@ -1,6 +1,6 @@
-import { DEBUG_SPRITE } from 'data/config';
+import { DEBUG_SPRITE } from 'engine/data/config';
 
-import { GUI } from 'ui';
+import { GUI } from 'engine/ui';
 
 import Scene, { SceneConf } from 'engine/scene';
 import { Vector2D } from 'engine/geometry/vector';

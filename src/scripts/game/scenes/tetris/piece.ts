@@ -1,4 +1,4 @@
-import { getRandomArrayItem } from 'core/array';
+import { getRandomArrayItem } from 'engine/core/array';
 
 import { GRID_WIDTH, GRID_HEIGHT } from 'game/config';
 

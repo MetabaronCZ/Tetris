@@ -1,4 +1,4 @@
-import { GUI } from 'ui';
+import { GUI } from 'engine/ui';
 
 import Input from 'engine/input';
 import { createCamera } from 'engine/ecs/camera';
@@ -18,7 +18,6 @@ const OFF_TOP = (SPRITE_SIZE * GRID_HEIGHT - 1) / 2;
 
 const createWorld = (): GameSceneConf => {
     const atlas = new GameAtlas(atlasDefinition);
-
     const tiles: Tile[] = [];
 
     // grid tiles

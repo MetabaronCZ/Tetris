@@ -1,4 +1,4 @@
-import { loadImage } from 'core/image';
+import { loadImage } from 'engine/core/image';
 
 import { createUV } from 'engine/graphics/uv';
 import { Texture } from 'engine/graphics/renderer';
