@@ -15,7 +15,7 @@ export const UPDATE_TICK = 1000 / UPS; // preffered length of one update
 
 // debug info
 export const DEBUG_SPRITE = false;
-export const DEBUG_COUNTER = true;
+export const DEBUG_COUNTER = false;
 export const DEBUG_POINT_SIZE = 4.0;
 export const DEBUG_POINT_COLOR = createColor(0, 0, 0);
 export const DEBUG_AXIS_COLOR = createColor(0, 255, 255);
