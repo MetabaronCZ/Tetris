@@ -1,7 +1,7 @@
-import { GUIAction } from 'engine/ui/actions';
+import { GameGUIAction } from 'game/ui/store';
 import { InfoState } from 'game/ui/components/info/reducers';
 
-type SetInfo = GUIAction<'INFO', InfoState>;
+type SetInfo = GameGUIAction<'INFO', InfoState>;
 
 export type InfoActions = SetInfo;
 export type InfoActionID = 'INFO';
