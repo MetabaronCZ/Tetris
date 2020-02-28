@@ -7,13 +7,17 @@ import App from 'engine/ui/components/App';
 import { setDebug } from 'engine/ui/components/Debug/actions';
 import { DebugState } from 'engine/ui/components/debug/reducers';
 
-export interface GUI {
+interface GUIAPI {
     readonly debug: {
         readonly set: (debug: DebugState) => void;
     };
 }
 
-export const initGUI = <T extends {}>(root: HTMLDivElement, api: (store: GUIStore) => T, content: React.ReactNode): GUI & T => {
+export type GUI<T extends {} = {}> = GUIAPI & {
+    readonly [id in keyof T]: T[id];
+}
+
+export const initGUI = <T extends {}>(root: HTMLDivElement, api: (store: GUIStore) => T, content: React.ReactNode): GUI<T> => {
     const store = initStore();
     render(
         <App store={store}>

@@ -22,7 +22,7 @@ const gameGUI = (store: GUIStore): GameAPI => ({
     }
 });
 
-export type GameGUI = GUI & GameAPI;
+export type GameGUI = GUI<GameAPI>;
 
 export const initGameGUI = (root: HTMLDivElement): GameGUI => {
     return initGUI(root, gameGUI, <Router />);
