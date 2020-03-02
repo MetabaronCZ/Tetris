@@ -7,7 +7,7 @@ import { GUIStore } from 'engine/ui/store';
 import Debug from 'engine/ui/components/Debug';
 
 interface Props {
-    readonly store: GUIStore;
+    readonly store: GUIStore<any, any>;
 }
 
 const App: React.SFC<Props> = ({ store, children }) => (

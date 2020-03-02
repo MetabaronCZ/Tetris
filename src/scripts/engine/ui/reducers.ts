@@ -1,14 +1,17 @@
-import { combineReducers, ReducersMapObject } from 'redux';
+import { combineReducers, ReducersMapObject, Reducer } from 'redux';
 
-import { GUIState } from 'engine/ui/store';
 import { GUIActions } from 'engine/ui/actions';
+import { GUIState, GUIAPI } from 'engine/ui/store';
 import { debugReducer } from 'engine/ui/components/Debug/reducers';
 
-import { infoReducer } from 'game/ui/components/Info/reducers';
+const guiReducers = combineReducers<GUIAPI, GUIActions<any>>({
+    debug: debugReducer
+});
 
-const reducers = combineReducers<GUIState, GUIActions>({
-    debug: debugReducer,
-    info: infoReducer
-} as ReducersMapObject<GUIState>);
-
-export default reducers;
+export const getReducers = <T extends {}, U extends string>(gameReducers: Reducer<T, GUIActions<U>>): Reducer<GUIState<T>, GUIActions<U>> => {
+    const reducers: ReducersMapObject<GUIState<T>, GUIActions<U>> = {
+        engine: guiReducers,
+        game: gameReducers
+    };
+    return combineReducers(reducers);
+};

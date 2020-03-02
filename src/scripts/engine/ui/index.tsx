@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from 'react-dom';
 
-import { initStore, GUIStore } from 'engine/ui/store';
+import { GUIStore } from 'engine/ui/store';
 
 import App from 'engine/ui/components/App';
 import { setDebug } from 'engine/ui/components/Debug/actions';
@@ -17,8 +17,16 @@ export type GUI<T extends {} = {}> = GUIAPI & {
     readonly [id in keyof T]: T[id];
 }
 
-export const initGUI = <T extends {}>(root: HTMLDivElement, api: (store: GUIStore) => T, content: React.ReactNode): GUI<T> => {
-    const store = initStore();
+interface GUIConf<T extends {}, U extends {}, V extends string> {
+    readonly root: HTMLDivElement;
+    readonly store: GUIStore<U, V>;
+    readonly api: (store: GUIStore<U, V>) => T;
+    readonly content: React.ReactNode;
+}
+
+export const initGUI = <T extends {}, U extends {}, V extends string>(conf: GUIConf<T, U, V>): GUI<T> => {
+    const { root, store, api, content } = conf;
+
     render(
         <App store={store}>
             {content}

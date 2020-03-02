@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { GUIState } from 'engine/ui/store';
+import { GameGUIState } from 'game/ui/store';
 
 interface Props {
     readonly score: number;
@@ -9,10 +9,10 @@ interface Props {
     readonly speed: number;
 }
 
-const mapStateToProps = (state: GUIState): Props => ({
-    score: state.info.score,
-    removed: state.info.removed,
-    speed: state.info.speed
+const mapStateToProps = (state: GameGUIState): Props => ({
+    score: state.game.info.score,
+    removed: state.game.info.removed,
+    speed: state.game.info.speed
 });
 
 const Info: React.SFC<Props> = ({ score, removed, speed }) => (

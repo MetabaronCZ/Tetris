@@ -1,9 +1,16 @@
-import { GUIActionType, GUIActionBase, GUIActions } from 'engine/ui/actions';
-import { InfoActionID, InfoActions } from 'game/ui/components/Info/actions';
+import { GUIState, GUIStore } from 'engine/ui/store';
+import { GUIActionType, PayloadAction } from 'engine/ui/actions';
+
+import { InfoState } from 'game/ui/components/Info/reducers';
+import { InfoActionID } from 'game/ui/components/Info/actions';
 
 type GameAPIActionType = InfoActionID;
 type GameGUIActionType = GUIActionType<GameAPIActionType>;
-export type GameGUIAction<T extends GameGUIActionType, U> = GUIActionBase<T, T, U>;
+export type GameGUIAction<T extends GameGUIActionType, U> = PayloadAction<T, U>;
+export type GameGUIActions = GameGUIAction<any, any>;
 
-type GameAPIActions = InfoActions;
-export type GameGUIActions = GUIActions | GameAPIActions;
+export interface GameAPIState {
+    readonly info: InfoState;
+}
+export type GameGUIState = GUIState<GameAPIState>;
+export type GameGUIStore = GUIStore<GameAPIState, GameAPIActionType>;

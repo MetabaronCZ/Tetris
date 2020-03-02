@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { GUIState } from 'engine/ui/store';
+import { GameGUIState } from 'game/ui/store';
 
 import Info from 'game/ui/components/Info';
 import Intro from 'game/ui/components/Intro';
@@ -16,10 +16,10 @@ interface Props {
     readonly score: number;
 }
 
-const mapStateToProps = (state: GUIState): Props => ({
-    phase: state.info.phase,
-    paused: state.info.paused,
-    score: state.info.score
+const mapStateToProps = (state: GameGUIState): Props => ({
+    phase: state.game.info.phase,
+    paused: state.game.info.paused,
+    score: state.game.info.score
 });
 
 const getContent = (phase: Phase, paused: boolean, score: number): React.ReactNode => {

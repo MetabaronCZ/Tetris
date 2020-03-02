@@ -6,7 +6,7 @@ import { DebugState } from 'engine/ui/components/debug/reducers';
 
 type Props = DebugState;
 
-const mapStateToProps = (state: GUIState): DebugState => state.debug;
+const mapStateToProps = (state: GUIState): DebugState => state.engine.debug;
 
 const Debug: React.SFC<Props> = ({ ups, fps }) => (
     <div className="Debug">
