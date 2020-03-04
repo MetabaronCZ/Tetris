@@ -24,7 +24,7 @@ class Grid {
     private piece: Piece | null = null;
     private tiles: GridTiles = [];
 
-    private removed = 0; // number of removed rows
+    private lines = 0; // number of removed lines
     private score = 0; // player score
 
     private speed = 0; // game speed
@@ -49,8 +49,8 @@ class Grid {
         return this.score;
     }
 
-    public getRemoved(): number {
-        return this.removed;
+    public getLines(): number {
+        return this.lines;
     }
 
     public getSpeed(): number {
@@ -82,7 +82,7 @@ class Grid {
         this.piece = null;
         this.nextPiece = null;
         this.score = 0;
-        this.removed = 0;
+        this.lines = 0;
         this.speed = 0;
         this.stepCount = 0;
         this.maxStep = getMaxStep(this.speed);
@@ -133,7 +133,7 @@ class Grid {
             return;
         }
         this.piece = null;
-        this.handleRows();
+        this.handleLines();
     }
 
     public rotate(): void {
@@ -249,8 +249,8 @@ class Grid {
         }
     }
 
-    private handleRows(): void {
-        // get filled rows
+    private handleLines(): void {
+        // get full lines
         const filled: number[] = [];
 
         this.tiles.forEach((row, i) => {
@@ -259,9 +259,9 @@ class Grid {
             }
         });
 
-        let removed = filled.length;
+        let lines = filled.length;
 
-        if (removed > 0) {
+        if (lines > 0) {
             // run animation
             this.phase = 'ANIMATING';
 
@@ -269,25 +269,25 @@ class Grid {
                 this.phase = 'RUNNING';
                 this.animation = null;
 
-                // remove filled rows
+                // remove full lines
                 this.tiles = this.tiles.filter((row, i) => !filled.includes(i));
 
                 // update score / info
-                const score = getScore(this.speed, removed);
-                this.removed += removed;
+                const score = getScore(this.speed, lines);
+                this.lines += lines;
                 this.score += score;
     
                 // recalc game speed
-                this.speed = Math.floor(this.removed / 10);
+                this.speed = Math.floor(this.lines / 10);
                 this.speed = Math.min(this.speed, MAX_SPEED);
                 this.stepCount = 0;
                 this.maxStep = getMaxStep(this.speed);
         
-                // put back removed rows
-                while (removed) {
+                // put back removed lines
+                while (lines) {
                     const row = this.createRow();
                     this.tiles.unshift(row);
-                    removed--;
+                    lines--;
                 }
             });
         }

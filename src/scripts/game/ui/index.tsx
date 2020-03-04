@@ -15,14 +15,14 @@ import { Phase } from 'game/scenes/tetris/grid';
 
 interface GameAPI {
     readonly info: {
-        readonly set: (phase: Phase, paused: boolean, score: number, removed: number, speed: number) => void;
+        readonly set: (phase: Phase, paused: boolean, score: number, lines: number, speed: number) => void;
     };
 }
 
 const gameGUI = (store: GameGUIStore): GameAPI => ({
     info: {
-        set: (phase, paused, score, removed, speed) => {
-            store.dispatch(setInfo({ phase, paused, score, removed, speed }));
+        set: (phase, paused, score, lines, speed) => {
+            store.dispatch(setInfo({ phase, paused, score, lines, speed }));
         }
     }
 });

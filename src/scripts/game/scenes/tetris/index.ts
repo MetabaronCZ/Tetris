@@ -137,9 +137,9 @@ class TetrisScene extends GameScene {
         const phase = grid.getPhase();
         const paused = grid.isPaused();
         const score = grid.getScore();
-        const removed = grid.getRemoved();
+        const lines = grid.getLines();
         const speed = grid.getSpeed();
-        gui.info.set(phase, paused, score, removed, speed);
+        gui.info.set(phase, paused, score, lines, speed);
     }
 }
 
