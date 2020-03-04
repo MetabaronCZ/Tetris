@@ -73,22 +73,27 @@ class TetrisScene extends GameScene {
 
         if (input.isKeyDown('SPACE')) {
             grid.start();
-        } else if (input.isKeyDown('ESC')) {
+        }
+
+        if (input.isKeyDown('ESC')) {
             grid.pause();
-        } else if (input.isKeyDown('LEFT')) {
+        }
+
+        if (input.isKeyDown('UP')) {
+            grid.rotate();
+        }
+
+        if (input.isKeyPressed('LEFT')) {
             grid.moveLeft();
-        } else if (input.isKeyDown('RIGHT')) {
+        } else if (input.isKeyPressed('RIGHT')) {
             grid.moveRight();
         } else if (input.isKeyPressed('DOWN')) {
             grid.moveDown();
-        } else if (input.isKeyDown('UP')) {
-            grid.rotate();
         }
     }
 
     public update(): void {
         const { grid, textures, entities } = this;
-
         grid.step();
 
         const tiles = grid.getTiles();

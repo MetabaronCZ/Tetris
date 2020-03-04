@@ -1,4 +1,4 @@
-import { MAX_SPEED, ANIM_DURATION } from 'game/config';
+import { MAX_SPEED, ANIM_DURATION, INPUT_DELAY } from 'game/config';
 
 import { getScore } from 'game/scenes/tetris/score';
 import TileAnimation from 'game/scenes/tetris/animation';
@@ -9,6 +9,7 @@ import {
 export type Phase = 'INIT' | 'RUNNING' | 'ANIMATING' | 'GAME_OVER';
 export type TileValue = 0 | 1;
 export type GridTiles = TileValue[][];
+type UserMove = 'NONE' | 'LEFT' | 'RIGHT' | 'DOWN';
 
 const getMaxStep = (speed: number): number => 10 * (MAX_SPEED + 1 - speed);
 
@@ -18,6 +19,9 @@ class Grid {
 
     private phase: Phase = 'INIT';
     private paused = false;
+
+    private userMove: UserMove = 'NONE';
+    private shouldMove = false;
 
     private animation: TileAnimation | null = null;
     private nextPiece: Piece | null = null;
@@ -78,6 +82,8 @@ class Grid {
         this.generateGrid();
 
         this.phase = ('INIT' === phase ? 'RUNNING' : 'INIT');
+        this.userMove = 'NONE';
+        this.shouldMove = false;
         this.paused = false;
         this.piece = null;
         this.nextPiece = null;
@@ -97,43 +103,24 @@ class Grid {
     }
 
     public moveLeft(): void {
-        const { piece } = this;
-
-        if (!this.canAct() || !piece) {
-            return;
+        if (this.canAct()) {
+            this.shouldMove = true;
+            this.userMove = 'LEFT';
         }
-        const newPiece: Piece = { ...piece };
-        newPiece.x--;
-
-        this.replacePiece(newPiece);
     }
 
     public moveRight(): void {
-        const { piece } = this;
-
-        if (!this.canAct() || !piece) {
-            return;
+        if (this.canAct()) {
+            this.shouldMove = true;
+            this.userMove = 'RIGHT';
         }
-        const newPiece: Piece = { ...piece };
-        newPiece.x++;
-
-        this.replacePiece(newPiece);
     }
 
     public moveDown(): void {
-        const { piece } = this;
-
-        if (!this.canAct() || !piece) {
-            return;
+        if (this.canAct()) {
+            this.shouldMove = true;
+            this.userMove = 'DOWN';
         }
-        const newPiece: Piece = { ...piece };
-        newPiece.y++;
-
-        if (this.replacePiece(newPiece)) {
-            return;
-        }
-        this.piece = null;
-        this.handleLines();
     }
 
     public rotate(): void {
@@ -150,7 +137,11 @@ class Grid {
     }
 
     public step(): void {
-        const { phase, piece, animation, maxStep } = this;
+        const { phase, piece, animation, maxStep, userMove, shouldMove } = this;
+
+        if (!shouldMove) {
+            this.userMove = 'NONE';
+        }
 
         if (this.paused) {
             return;
@@ -168,13 +159,18 @@ class Grid {
             case 'RUNNING': {
                 this.stepCount++;
 
+                if (0 === this.stepCount % INPUT_DELAY) {
+                    this.move(userMove);
+                    this.shouldMove = false;
+                }
+
                 if (this.stepCount < maxStep) {
                     return;
                 }
                 this.stepCount = 0;
         
                 if (piece) {
-                    this.moveDown();
+                    this.move('DOWN');
                     return;
                 }
                 this.addPiece();
@@ -189,7 +185,6 @@ class Grid {
 
             default:
                 // do nothing
-                return;
         }
     }
 
@@ -290,6 +285,40 @@ class Grid {
                     lines--;
                 }
             });
+        }
+    }
+
+    private move(userMove: UserMove): void {
+        const { piece } = this;
+
+        if (!this.canAct() || !piece) {
+            return;
+        }
+        const newPiece: Piece = { ...piece };
+
+        switch (userMove) {
+            case 'LEFT':
+                newPiece.x--;
+                this.replacePiece(newPiece);
+                return;
+
+            case 'RIGHT':
+                newPiece.x++;
+                this.replacePiece(newPiece);
+                return;
+
+            case 'DOWN':
+                newPiece.y++;
+
+                if (this.replacePiece(newPiece)) {
+                    return;
+                }
+                this.piece = null;
+                this.handleLines();
+                return;
+
+            default:
+                // do nothing
         }
     }
 }

@@ -3,3 +3,4 @@ export const GRID_HEIGHT = 20;
 export const MAX_SPEED = 10; // maximum game difficulty
 export const SPRITE_SIZE = 1; // multiple of DISTANCE_TO_PIXEL_RATIO
 export const ANIM_DURATION = 60; // tile animation duration [in Grid steps]
+export const INPUT_DELAY = 10; // number of game steps to apply piece movement
