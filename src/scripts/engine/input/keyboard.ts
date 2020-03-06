@@ -16,9 +16,11 @@ const keyTable: KeyTable = {
 };
 
 interface Key {
-    up: boolean;
-    down: boolean;
-    pressed: boolean;
+    up: boolean; // one-time key up event triggered
+    down: boolean; // one-time key down event triggered
+    pressed: boolean; // key is in pressed state
+    start: number | null; // key down timestamp
+    end: number | null; // key up timestamp
 }
 
 export type Keys = {
@@ -35,7 +37,9 @@ class Keyboard {
             keys[id] = {
                 up: false,
                 down: false,
-                pressed: false
+                pressed: false,
+                start: null,
+                end: null
             };
         }
         this.keys = keys as Keys;
@@ -53,6 +57,16 @@ class Keyboard {
         return this.keys[key].pressed;
     }
 
+    public getPressedDuration(key: KeyID): number {
+        const k = this.keys[key];
+
+        if (null === k.start) {
+            return 0;
+        }
+        const end = k.end || performance.now();
+        return end - k.start;
+    }
+
     public press(code: number): void {
         const id = keyTable[code] || null;
 
@@ -63,6 +77,7 @@ class Keyboard {
                 key.up = false;
                 key.down = true;
                 key.pressed = true;
+                key.start = performance.now();
             }
         }
     }
@@ -75,6 +90,7 @@ class Keyboard {
             key.up = true;
             key.down = false;
             key.pressed = false;
+            key.end = performance.now();
         }
     }
 
@@ -83,6 +99,8 @@ class Keyboard {
             const key = this.keys[id];
             key.up = false;
             key.down = false;
+            key.start = null;
+            key.end = null;
         }
     }
 }
