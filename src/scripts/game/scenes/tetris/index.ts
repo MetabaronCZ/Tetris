@@ -1,10 +1,13 @@
-import Input from 'engine/input';
-import { createCamera } from 'engine/ecs/camera';
-import { setColorAlpha } from 'engine/graphics/color';
+import { GRID_WIDTH, GRID_HEIGHT, SPRITE_SIZE } from 'game/config';
 
 import pieces from 'game/data/pieces';
+import { soundData } from 'game/data/sounds';
 import atlasDefinition from 'game/data/atlas';
-import { GRID_WIDTH, GRID_HEIGHT, SPRITE_SIZE } from 'game/config';
+
+import Input from 'engine/input';
+import GAudio from 'engine/audio';
+import { createCamera } from 'engine/ecs/camera';
+import { setColorAlpha } from 'engine/graphics/color';
 
 import { GameGUI } from 'game/ui';
 import GameAtlas from 'game/atlas';
@@ -15,7 +18,10 @@ import { Tile, createTile } from 'game/ecs/entites/tile-entity';
 const OFF_LEFT = (SPRITE_SIZE * GRID_WIDTH - 1) / 2;
 const OFF_TOP = (SPRITE_SIZE * GRID_HEIGHT - 1) / 2;
 
-const createWorld = (): GameSceneConf => {
+type SoundID = keyof typeof soundData;
+export type OnSound = (id: SoundID) => void;
+
+const createWorld = (audio: GAudio): GameSceneConf => {
     const atlas = new GameAtlas(atlasDefinition);
     const tiles: Tile[] = [];
 
@@ -53,19 +59,27 @@ const createWorld = (): GameSceneConf => {
         }
     }
 
+    // audio
+    audio.setMasterVolume(0.25);
+
     return {
+        audio,
         camera: createCamera(),
         entities: tiles,
-        textures: [atlas]
+        textures: [atlas],
+        sounds: Object.entries(soundData)
     };
 };
 
 class TetrisScene extends GameScene {
     private readonly grid: Grid;
 
-    constructor() {
-        super(createWorld());
-        this.grid = new Grid(GRID_WIDTH, GRID_HEIGHT);
+    constructor(audio: GAudio) {
+        super(createWorld(audio));
+
+        this.grid = new Grid(GRID_WIDTH, GRID_HEIGHT, id => {
+            audio.tracks[id].play();
+        });
     }
 
     public handleInput(input: Input): void {

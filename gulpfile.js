@@ -36,6 +36,11 @@ const paths = {
         files: `${pathSrc}/images/**/*`,
         dist: `${pathDist}/images`
     },
+    sounds: {
+        src: `${pathSrc}/sounds`,
+        files: `${pathSrc}/sounds/**/*`,
+        dist: `${pathDist}/sounds`
+    },
     templates: {
         src: `${pathSrc}/templates/index.html`,
         files: `${pathSrc}/templates/**/*.html`,
@@ -79,6 +84,13 @@ const taskImages = () => {
     return gulp.src(paths.images.files)
         .pipe(changed(paths.images.dist))
         .pipe(gulp.dest(paths.images.dist));
+};
+
+// copy sound files
+const taskSounds = () => {
+    return gulp.src(paths.sounds.files)
+        .pipe(changed(paths.sounds.dist))
+        .pipe(gulp.dest(paths.sounds.dist));
 };
 
 // copy index.html
@@ -126,11 +138,12 @@ const taskWatch = cb => {
     gulp.watch(paths.styles.files, gulp.series(taskStylelint, taskStyles));
     gulp.watch(paths.fonts.files, taskFonts);
     gulp.watch(paths.images.files, taskImages);
+    gulp.watch(paths.sounds.files, taskSounds);
     cb();
 };
 
 // build app
-const build = gulp.series(taskClear, taskIndex, taskFonts, taskImages, taskStylelint, taskStyles, taskScripts);
+const build = gulp.series(taskClear, taskIndex, taskFonts, taskImages, taskSounds, taskStylelint, taskStyles, taskScripts);
 
 // develop app (set watch before build, because "watch mode" in Webpack)
 const dev = gulp.series(taskWatch, build);

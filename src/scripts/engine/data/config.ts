@@ -2,6 +2,7 @@ import { createColor } from 'engine/graphics/color';
 
 // paths
 export const PATH_IMAGES = 'images';
+export const PATH_SOUNDS = 'sounds';
 
 // graphics
 export const RENDER_WIDTH = 1920; // internal view width

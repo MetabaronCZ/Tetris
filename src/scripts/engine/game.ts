@@ -3,9 +3,9 @@ import {
 } from 'engine/data/config';
 
 import { GUI } from 'engine/ui';
-
 import Input from 'engine/input';
 import Scene from 'engine/scene';
+import GAudio from 'engine/audio';
 import { createView } from 'engine/view';
 import Renderer from 'engine/graphics/renderer';
 import SpriteAtlas from 'engine/graphics/atlas';
@@ -15,22 +15,32 @@ import StatCounter from 'engine/debug';
 import EmptyCounter from 'engine/debug/empty';
 import UpdateCounter from 'engine/debug/update';
 
-class Game<T extends string, U extends ComponentMap<T>, V extends SpriteAtlas<any>> {
+type SceneID<T extends string> = 'INITIAL' | 'LOADING' | T;
+type SceneGetter<S extends string, T extends string, U extends ComponentMap<T>, V extends SpriteAtlas<any>> = (audio: GAudio) => Scene<SceneID<S>, T, U, V>;
+
+export type Scenes<S extends string, T extends string, U extends ComponentMap<T>, V extends SpriteAtlas<any>> = {
+    readonly [id in SceneID<S>]: SceneGetter<SceneID<S>, T, U, V>;
+};
+
+class Game<S extends string, T extends string, U extends ComponentMap<T>, V extends SpriteAtlas<any>> {
     private readonly gui: GUI;
     private readonly input: Input;
+    private readonly audio: GAudio;
     private readonly renderer: Renderer;
     private readonly counter: StatCounter;
-    private readonly loadingScene: Scene<T, U, V>;
+    private readonly scenes: Scenes<S, T, U, V>;
+    private readonly loadingScene: Scene<SceneID<S>, T, U, V>;
 
-    private currentScene: Scene<T, U, V>;
+    private currentScene: Scene<SceneID<S>, T, U, V>;
     private isRunning = false;
     private lastUpdate = 0;
     private accum = 0;
 
-    constructor(canvas: HTMLCanvasElement, gui: GUI, loadingScene: Scene<T, U, V>, initScene: Scene<T, U, V>) {
+    constructor(canvas: HTMLCanvasElement, gui: GUI, scenes: Scenes<S, T, U, V>) {
         const view = createView(RENDER_WIDTH, RENDER_HEIGHT);
         this.renderer = new Renderer(canvas, view);
         this.input = new Input(view);
+        this.audio = new GAudio();
         this.gui = gui;
 
         if (DEBUG_COUNTER) {
@@ -38,11 +48,14 @@ class Game<T extends string, U extends ComponentMap<T>, V extends SpriteAtlas<an
         } else {
             this.counter = new EmptyCounter();
         }
+        const loadingScene = scenes.LOADING(this.audio);
+
+        this.scenes = scenes;
         this.loadingScene = loadingScene;
         this.currentScene = this.loadingScene;
 
-        this.setScene(this.loadingScene)
-            .then(() => this.setScene(initScene));
+        this.setScene('LOADING')
+            .then(() => this.setScene('INITIAL'));
     }
 
     public start(): void {
@@ -90,24 +103,29 @@ class Game<T extends string, U extends ComponentMap<T>, V extends SpriteAtlas<an
     }
 
     private update(): void {
-        this.counter.updateStart();
-        this.currentScene.update();
-        this.counter.updateEnd();
+        const { currentScene, counter } = this;
+        counter.updateStart();
+        currentScene.update();
+        counter.updateEnd();
     }
 
     private render(): void {
-        const { gui, renderer, currentScene } = this;
-        this.counter.renderStart();
+        const { gui, renderer, currentScene, counter } = this;
+        counter.renderStart();
         currentScene.render(renderer, gui);
-        this.counter.renderEnd();
+        counter.renderEnd();
     }
 
-    private setScene(scene: Scene<T, U, V>): Promise<void> {
+    private setScene(id: SceneID<S>): Promise<void> {
+        const { audio, scenes } = this;
         this.currentScene = this.loadingScene;
 
+        const scene = scenes[id](audio);
+
         return scene.load()
-            .then(textures => {
+            .then(([textures, sounds]) => {
                 this.renderer.setTextures(textures);
+                this.audio.load(sounds);
                 this.currentScene = scene;
             })
             .catch(console.error);

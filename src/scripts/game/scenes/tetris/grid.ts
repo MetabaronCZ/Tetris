@@ -1,5 +1,6 @@
 import { MAX_SPEED, ANIM_DURATION, INPUT_DELAY } from 'game/config';
 
+import { OnSound } from 'game/scenes/tetris';
 import { getScore } from 'game/scenes/tetris/score';
 import TileAnimation from 'game/scenes/tetris/animation';
 import {
@@ -16,12 +17,14 @@ const getMaxStep = (speed: number): number => 10 * (MAX_SPEED + 1 - speed);
 class Grid {
     private readonly width: number;
     private readonly height: number;
+    private readonly onSound: OnSound;
 
     private phase: Phase = 'INIT';
     private paused = false;
 
     private userMove: UserMove = 'NONE';
     private shouldMove = false;
+    private shouldRotate = false;
 
     private animation: TileAnimation | null = null;
     private nextPiece: Piece | null = null;
@@ -35,9 +38,10 @@ class Grid {
     private stepCount = 0;
     private maxStep: number;
 
-    constructor(width: number, height: number) {
+    constructor(width: number, height: number, onSound: OnSound) {
         this.width = width;
         this.height = height;
+        this.onSound = onSound;
         this.maxStep = getMaxStep(this.speed);
     }
 
@@ -74,7 +78,7 @@ class Grid {
     }
 
     public start(): void {
-        const { phase } = this;
+        const { phase, onSound } = this;
 
         if ('INIT' !== phase && 'GAME_OVER' !== phase) {
             return;
@@ -84,6 +88,7 @@ class Grid {
         this.phase = ('INIT' === phase ? 'RUNNING' : 'INIT');
         this.userMove = 'NONE';
         this.shouldMove = false;
+        this.shouldRotate = false;
         this.paused = false;
         this.piece = null;
         this.nextPiece = null;
@@ -92,13 +97,16 @@ class Grid {
         this.speed = 0;
         this.stepCount = 0;
         this.maxStep = getMaxStep(this.speed);
+
+        onSound('START');
     }
 
     public pause(): void {
-        const { phase } = this;
+        const { phase, onSound } = this;
 
         if ('RUNNING' === phase || 'ANIMATING' === phase) {
             this.paused = !this.paused;
+            onSound('PAUSE');
         }
     }
 
@@ -124,24 +132,18 @@ class Grid {
     }
 
     public rotate(): void {
-        const { piece } = this;
-
-        if (!this.canAct() || !piece) {
-            return;
+        if (this.canAct()) {
+            this.shouldRotate = true;
         }
-        const newPiece: Piece = { ...piece };
-        newPiece.rot += 1;
-        newPiece.rot %= piece.variants;
-
-        this.replacePiece(newPiece);
     }
 
     public step(): void {
-        const { phase, piece, animation, maxStep, userMove, shouldMove } = this;
+        const { phase, piece, animation, maxStep, userMove, shouldMove, shouldRotate } = this;
 
         if (!shouldMove) {
             this.userMove = 'NONE';
         }
+        this.shouldRotate = false;
 
         if (this.paused) {
             return;
@@ -159,11 +161,18 @@ class Grid {
             case 'RUNNING': {
                 this.stepCount++;
 
+                // user movement
                 if (0 === this.stepCount % INPUT_DELAY) {
                     this.move(userMove);
                     this.shouldMove = false;
                 }
 
+                // user rotation
+                if (shouldRotate) {
+                    this.spin();
+                }
+
+                // gravity movement
                 if (this.stepCount < maxStep) {
                     return;
                 }
@@ -178,6 +187,7 @@ class Grid {
                 if (!this.piece) {
                     // force game over
                     this.phase = 'GAME_OVER';
+                    this.onSound('GAME_OVER');
                     return;
                 }
                 return;
@@ -245,10 +255,12 @@ class Grid {
     }
 
     private handleLines(): void {
+        const { tiles, onSound } = this;
+
         // get full lines
         const filled: number[] = [];
 
-        this.tiles.forEach((row, i) => {
+        tiles.forEach((row, i) => {
             if (!row.includes(0)) {
                 filled.push(i);
             }
@@ -259,13 +271,14 @@ class Grid {
         if (lines > 0) {
             // run animation
             this.phase = 'ANIMATING';
+            onSound(lines > 3 ? 'LINE4' : 'LINE');
 
             this.animation = new TileAnimation(ANIM_DURATION, filled, () => {
                 this.phase = 'RUNNING';
                 this.animation = null;
 
                 // remove full lines
-                this.tiles = this.tiles.filter((row, i) => !filled.includes(i));
+                this.tiles = tiles.filter((row, i) => !filled.includes(i));
 
                 // update score / info
                 const score = getScore(this.speed, lines);
@@ -289,9 +302,9 @@ class Grid {
     }
 
     private move(userMove: UserMove): void {
-        const { piece } = this;
+        const { piece, onSound } = this;
 
-        if (!this.canAct() || !piece) {
+        if (!piece || 'NONE' === userMove) {
             return;
         }
         const newPiece: Piece = { ...piece };
@@ -299,26 +312,50 @@ class Grid {
         switch (userMove) {
             case 'LEFT':
                 newPiece.x--;
-                this.replacePiece(newPiece);
+                
+                if (this.replacePiece(newPiece)) {
+                    onSound('MOVE');
+                }
                 return;
 
             case 'RIGHT':
                 newPiece.x++;
-                this.replacePiece(newPiece);
+
+                if (this.replacePiece(newPiece)) {
+                    onSound('MOVE');
+                }
                 return;
 
             case 'DOWN':
                 newPiece.y++;
 
                 if (this.replacePiece(newPiece)) {
+                    onSound('MOVE');
                     return;
                 }
                 this.piece = null;
+
+                onSound('DROP');
                 this.handleLines();
                 return;
 
             default:
                 // do nothing
+        }
+    }
+
+    private spin(): void {
+        const { piece, onSound } = this;
+
+        if (!piece) {
+            return;
+        }
+        const newPiece: Piece = { ...piece };
+        newPiece.rot += 1;
+        newPiece.rot %= piece.variants;
+
+        if (this.replacePiece(newPiece)) {
+            onSound('ROTATE');
         }
     }
 }
