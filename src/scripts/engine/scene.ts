@@ -2,6 +2,7 @@ import { loadSound } from 'engine/core/sound';
 
 import { GUI } from 'engine/ui';
 import Input from 'engine/input';
+import { View } from 'engine/view';
 import SpriteAtlas from 'engine/graphics/atlas';
 import GAudio, { TrackSource } from 'engine/audio';
 import Renderer, { Texture } from 'engine/graphics/renderer';
@@ -54,7 +55,7 @@ abstract class Scene<T extends string, U extends ComponentMap, V extends SpriteA
     abstract handleInput(input: Input): void;
     abstract update(): void;
 
-    abstract render(renderer: Renderer, gui: GUI): void;
+    abstract render(renderer: Renderer, view: View, gui: GUI): void;
 }
 
 export default Scene;

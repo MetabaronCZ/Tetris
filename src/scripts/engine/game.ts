@@ -6,7 +6,7 @@ import { GUI } from 'engine/ui';
 import Input from 'engine/input';
 import Scene from 'engine/scene';
 import GAudio from 'engine/audio';
-import { createView } from 'engine/view';
+import { createView, View } from 'engine/view';
 import Renderer from 'engine/graphics/renderer';
 import SpriteAtlas from 'engine/graphics/atlas';
 import { ComponentMap } from 'engine/ecs/component';
@@ -23,6 +23,7 @@ export type Scenes<T extends string, U extends ComponentMap, V extends SpriteAtl
 
 class Game<T extends string, U extends ComponentMap, V extends SpriteAtlas> {
     private readonly gui: GUI;
+    private readonly view: View;
     private readonly input: Input;
     private readonly audio: GAudio;
     private readonly renderer: Renderer;
@@ -36,9 +37,9 @@ class Game<T extends string, U extends ComponentMap, V extends SpriteAtlas> {
     private accum = 0;
 
     constructor(canvas: HTMLCanvasElement, gui: GUI, scenes: Scenes<T, U, V>) {
-        const view = createView(RENDER_WIDTH, RENDER_HEIGHT);
-        this.renderer = new Renderer(canvas, view);
-        this.input = new Input(view);
+        this.view = createView(RENDER_WIDTH, RENDER_HEIGHT);
+        this.renderer = new Renderer(canvas);
+        this.input = new Input();
         this.audio = new GAudio();
         this.gui = gui;
 
@@ -95,8 +96,8 @@ class Game<T extends string, U extends ComponentMap, V extends SpriteAtlas> {
     };
 
     private handleInput(): void {
-        const { input, currentScene } = this;
-        input.update();
+        const { input, view, currentScene } = this;
+        input.update(view);
         currentScene.handleInput(input);
         input.reset();
     }
@@ -109,9 +110,9 @@ class Game<T extends string, U extends ComponentMap, V extends SpriteAtlas> {
     }
 
     private render(): void {
-        const { gui, renderer, currentScene, counter } = this;
+        const { view, gui, renderer, currentScene, counter } = this;
         counter.renderStart();
-        currentScene.render(renderer, gui);
+        currentScene.render(renderer, view, gui);
         counter.renderEnd();
     }
 

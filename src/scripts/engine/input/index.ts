@@ -15,15 +15,13 @@ const mouseInView = (x: number, y: number, view: View): boolean => {
 };
 
 class Input {
-    private readonly view: View;
     private readonly mouse: Mouse;
     private readonly keyboard: Keyboard;
 
     private isMouseVisible = false;
     private mouseNormalized: Vector2D | null = null;
 
-    constructor(view: View) {
-        this.view = view;
+    constructor() {
         this.mouse = new Mouse();
         this.keyboard = new Keyboard();
 
@@ -58,8 +56,8 @@ class Input {
         return this.keyboard.isPressed(key);
     }
 
-    public update(): void {
-        const { view, mouse, isMouseVisible } = this;
+    public update(view: View): void {
+        const { mouse, isMouseVisible } = this;
         this.mouseNormalized = null;
 
         let [mx, my] = mouse.getPosition();

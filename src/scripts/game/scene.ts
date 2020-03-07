@@ -1,5 +1,6 @@
 import { DEBUG_SPRITE } from 'engine/data/config';
 
+import { View } from 'engine/view';
 import { Scenes } from 'engine/game';
 import Scene, { SceneConf } from 'engine/scene';
 import { Vector2D } from 'engine/geometry/vector';
@@ -16,14 +17,14 @@ export type GameScenes = Scenes<GameSceneID, CMap, GameAtlas>;
 abstract class GameScene extends Scene<GameSceneID, CMap, GameAtlas> {
     abstract renderGUI(gui: GameGUI): void;
 
-    public render(renderer: Renderer, gui: GameGUI): void {
+    public render(renderer: Renderer, view: View, gui: GameGUI): void {
         const { camera } = this;
         const points: Vector2D[] = [];
         const sprites: SpriteRenderData[] = [];
         const circles: OutlineRenderData[] = [];
         const rectangles: OutlineRenderData[] = [];
 
-        renderer.start();
+        renderer.start(view);
 
         // render sprites / outlines / sprite centers
         for (const { position, orientation, boundingBox, visual } of this.entities) {
@@ -53,19 +54,19 @@ abstract class GameScene extends Scene<GameSceneID, CMap, GameAtlas> {
         }
 
         if (sprites.length) {
-            renderer.renderSpriteData(sprites, camera);
+            renderer.renderSpriteData(sprites, view, camera);
         }
 
         if (circles.length) {
-            renderer.renderCircleData(circles, camera);
+            renderer.renderCircleData(circles, view, camera);
         }
 
         if (rectangles.length) {
-            renderer.renderRectangleData(rectangles, camera);
+            renderer.renderRectangleData(rectangles, view, camera);
         }
 
         if (points.length) {
-            renderer.renderPointData(points, camera);
+            renderer.renderPointData(points, view, camera);
         }
 
         this.renderGUI(gui);

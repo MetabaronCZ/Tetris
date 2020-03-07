@@ -65,7 +65,6 @@ const updateOutlineData = (data: OutlineRenderData[], view: View, camera: Camera
 class Renderer {
     private readonly canvas: HTMLCanvasElement;
     private readonly gl: WebGL2RenderingContext;
-    private readonly view: View;
 
     private readonly renderSprites: SpriteRender;
     private readonly renderPoints?: PointRender;
@@ -77,8 +76,7 @@ class Renderer {
     private readonly circles: CircleRenderObject[] = [];
     private readonly rectangles: RectangleRenderObject[] = [];
 
-    constructor(canvas: HTMLCanvasElement, view: View) {
-        this.view = view;
+    constructor(canvas: HTMLCanvasElement) {
         this.canvas = canvas;
 
         const gl = canvas.getContext('webgl2', {
@@ -118,10 +116,10 @@ class Renderer {
         }
     }
 
-    public start(): void {
-        const { gl, view } = this;
+    public start(view: View): void {
+        const { gl } = this;
 
-        this.resize();
+        this.resize(view);
 
         gl.viewport(view.x, view.y, view.width, view.height);
     
@@ -132,11 +130,11 @@ class Renderer {
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);        
     }
 
-    public renderSpriteData(data: SpriteRenderData[], camera: Camera): void {
-        const { view } = this;
+    public renderSpriteData(data: SpriteRenderData[], view: View, camera: Camera): void {
+        const { sprites } = this;
 
         // reset sprites render data
-        this.sprites.length = 0;
+        sprites.length = 0;
 
         // prepare render data
         for (const [pos, ori, vertices, shape, sprite, color] of data) {
@@ -146,7 +144,7 @@ class Renderer {
                 continue;
             }
             vertices.forEach((vertex, i) => {
-                this.sprites.push({
+                sprites.push({
                     a_position: vertex,
                     a_texcoord: sprite.uv[i],
                     a_color: color
@@ -156,16 +154,16 @@ class Renderer {
 
         // render sprites
         this.renderSprites({
-            objects: this.sprites,
+            objects: sprites,
             uniforms: null
         });
     }
 
-    public renderCircleData(data: OutlineRenderData[], camera: Camera): void {
+    public renderCircleData(data: OutlineRenderData[], view: View, camera: Camera): void {
         if (!this.renderCircles) {
             return;
         }
-        const { circles, view } = this;
+        const { circles } = this;
         updateOutlineData(data, view, camera, circles, false);
 
         this.renderCircles({
@@ -176,11 +174,11 @@ class Renderer {
         });
     }
 
-    public renderRectangleData(data: OutlineRenderData[], camera: Camera, isAxes = false): void {
+    public renderRectangleData(data: OutlineRenderData[], view: View, camera: Camera, isAxes = false): void {
         if (!this.renderRectangles) {
             return;
         }
-        const { rectangles, view } = this;
+        const { rectangles } = this;
         updateOutlineData(data, view, camera, rectangles, isAxes);
 
         this.renderRectangles({
@@ -191,11 +189,11 @@ class Renderer {
         });
     }
 
-    public renderPointData(data: Vector2D[], camera: Camera): void {
+    public renderPointData(data: Vector2D[], view: View, camera: Camera): void {
         if (!this.renderPoints) {
             return;
         }
-        const { points, view } = this;
+        const { points } = this;
 
         // reset points render data
         points.length = 0;
@@ -217,7 +215,7 @@ class Renderer {
 
         // render points
         this.renderPoints({
-            objects: this.points,
+            objects: points,
             uniforms: {
                 u_pointsize: (gl, loc) => gl.uniform1f(loc, DEBUG_POINT_SIZE),
                 u_pointcolor: (gl, loc) => gl.uniform4fv(loc, DEBUG_POINT_COLOR)
@@ -225,13 +223,13 @@ class Renderer {
         });
     }
 
-    private resize(initial = false): void {
-        const { canvas, view } = this;
+    private resize(view: View): void {
+        const { canvas } = this;
         const width = canvas.clientWidth * RENDER_SCALE;
         const height = canvas.clientHeight * RENDER_SCALE;
         const hasChanged = (width !== canvas.width || height !== canvas.height);
 
-        if (initial || hasChanged) {
+        if (hasChanged) {
             canvas.width = width;
             canvas.height = height;
             updateView(view, width, height);

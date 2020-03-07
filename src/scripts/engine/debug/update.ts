@@ -1,5 +1,7 @@
 import StatCounter, { OnUpdate } from 'engine/debug';
 
+const COUNTER_INTERVAL = 1000; // UPS / FPS counter update interval [in ms]
+
 interface DebugInfo {
     ups: {
         start: number;
@@ -71,7 +73,7 @@ class UpdateCounter extends StatCounter {
 
             this.data = getData();
 
-        }, 1000);
+        }, COUNTER_INTERVAL);
     }
 }
 
