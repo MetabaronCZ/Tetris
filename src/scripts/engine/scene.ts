@@ -15,7 +15,7 @@ export interface SceneConf<T extends ComponentMap, U extends SpriteAtlas> {
     readonly camera: Camera;
     readonly textures: U[];
     readonly sounds: Array<[string, string]>;
-    readonly entities: Partial<Entity<T>>[];
+    readonly entities: Entity<Partial<T>>[];
 }
 
 export type SceneAssets = [Texture[], TrackSource[]];
@@ -25,7 +25,7 @@ abstract class Scene<T extends string, U extends ComponentMap, V extends SpriteA
     protected readonly camera: Camera;
     protected readonly textures: V[];
     protected readonly sounds: Array<[string, string]>;
-    protected readonly entities: Partial<Entity<U>>[] = [];
+    protected readonly entities: Entity<Partial<U>>[] = [];
     protected newScene: T | null = null;
 
     constructor(conf: SceneConf<U, V>) {
