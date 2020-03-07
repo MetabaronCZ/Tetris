@@ -1,12 +1,12 @@
 import { DEBUG_SPRITE } from 'engine/data/config';
 
+import { Scenes } from 'engine/game';
 import Scene, { SceneConf } from 'engine/scene';
 import { Vector2D } from 'engine/geometry/vector';
 import Renderer, { SpriteRenderData, OutlineRenderData } from 'engine/graphics/renderer';
 
 import { GameGUI } from 'game/ui';
 import GameAtlas from 'game/atlas';
-import { Scenes } from 'engine/game';
 import { ComponentID, CMap } from 'game/ecs';
 
 export type GameSceneConf = SceneConf<ComponentID, CMap, GameAtlas>;
