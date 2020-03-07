@@ -17,7 +17,7 @@ type Sprites<T extends string> = {
     readonly [id in T]: Sprite;
 };
 
-class SpriteAtlas<T extends string> {
+class SpriteAtlas<T extends string = never> {
     public readonly texture: string;
     public readonly sprites: Sprites<T>;
 

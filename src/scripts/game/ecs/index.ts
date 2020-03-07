@@ -8,6 +8,4 @@ export interface CMap extends EngineComponentMap {
     readonly type: TileType;
     readonly coordinates: Coordinates;
 }
-
-export type ComponentID = keyof CMap;
 export type GameEntity = Entity<Partial<CMap>>;

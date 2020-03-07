@@ -10,25 +10,25 @@ import { Camera } from 'engine/ecs/camera';
 import { Entity } from 'engine/ecs/entity';
 import { ComponentMap } from 'engine/ecs/component';
 
-export interface SceneConf<T extends string, U extends ComponentMap<T>, V extends SpriteAtlas<any>> {
+export interface SceneConf<T extends ComponentMap, U extends SpriteAtlas> {
     readonly audio: GAudio;
     readonly camera: Camera;
-    readonly textures: V[];
+    readonly textures: U[];
     readonly sounds: Array<[string, string]>;
-    readonly entities: Partial<Entity<U>>[];
+    readonly entities: Partial<Entity<T>>[];
 }
 
 export type SceneAssets = [Texture[], TrackSource[]];
 
-abstract class Scene<S extends string, T extends string, U extends ComponentMap<T>, V extends SpriteAtlas<any>> {
+abstract class Scene<T extends string, U extends ComponentMap, V extends SpriteAtlas> {
     protected readonly audio: GAudio;
     protected readonly camera: Camera;
     protected readonly textures: V[];
     protected readonly sounds: Array<[string, string]>;
     protected readonly entities: Partial<Entity<U>>[] = [];
-    protected newScene: S | null = null;
+    protected newScene: T | null = null;
 
-    constructor(conf: SceneConf<T, U, V>) {
+    constructor(conf: SceneConf<U, V>) {
         this.audio = conf.audio;
         this.camera = conf.camera;
         this.sounds = conf.sounds;
@@ -36,7 +36,7 @@ abstract class Scene<S extends string, T extends string, U extends ComponentMap<
         this.entities = conf.entities;
     }
 
-    public getNewScene(): S | null {
+    public getNewScene(): T | null {
         return this.newScene;
     }
 

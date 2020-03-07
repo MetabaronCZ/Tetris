@@ -5,16 +5,16 @@ import Scene, { SceneConf } from 'engine/scene';
 import { Vector2D } from 'engine/geometry/vector';
 import Renderer, { SpriteRenderData, OutlineRenderData } from 'engine/graphics/renderer';
 
+import { CMap } from 'game/ecs';
 import { GameGUI } from 'game/ui';
 import GameAtlas from 'game/atlas';
-import { ComponentID, CMap } from 'game/ecs';
 
-export type GameSceneConf = SceneConf<ComponentID, CMap, GameAtlas>;
+export type GameSceneConf = SceneConf<CMap, GameAtlas>;
 
 type GameSceneID = 'TETRIS';
-export type GameScenes = Scenes<GameSceneID, ComponentID, CMap, GameAtlas>;
+export type GameScenes = Scenes<GameSceneID, CMap, GameAtlas>;
 
-abstract class GameScene extends Scene<GameSceneID, ComponentID, CMap, GameAtlas> {
+abstract class GameScene extends Scene<GameSceneID, CMap, GameAtlas> {
     abstract renderGUI(gui: GameGUI): void;
 
     public render(renderer: Renderer, gui: GameGUI): void {

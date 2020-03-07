@@ -16,27 +16,26 @@ import EmptyCounter from 'engine/debug/empty';
 import UpdateCounter from 'engine/debug/update';
 
 type SceneID<T extends string> = 'INITIAL' | 'LOADING' | T;
-type SceneGetter<S extends string, T extends string, U extends ComponentMap<T>, V extends SpriteAtlas<any>> = (audio: GAudio) => Scene<SceneID<S>, T, U, V>;
 
-export type Scenes<S extends string, T extends string, U extends ComponentMap<T>, V extends SpriteAtlas<any>> = {
-    readonly [id in SceneID<S>]: SceneGetter<SceneID<S>, T, U, V>;
+export type Scenes<T extends string, U extends ComponentMap, V extends SpriteAtlas> = {
+    readonly [id in SceneID<T>]: (audio: GAudio) => Scene<SceneID<T>, U, V>;
 };
 
-class Game<S extends string, T extends string, U extends ComponentMap<T>, V extends SpriteAtlas<any>> {
+class Game<T extends string, U extends ComponentMap, V extends SpriteAtlas> {
     private readonly gui: GUI;
     private readonly input: Input;
     private readonly audio: GAudio;
     private readonly renderer: Renderer;
     private readonly counter: StatCounter;
-    private readonly scenes: Scenes<S, T, U, V>;
-    private readonly loadingScene: Scene<SceneID<S>, T, U, V>;
+    private readonly scenes: Scenes<T, U, V>;
+    private readonly loadingScene: Scene<SceneID<T>, U, V>;
 
-    private currentScene: Scene<SceneID<S>, T, U, V>;
+    private currentScene: Scene<SceneID<T>, U, V>;
     private isRunning = false;
     private lastUpdate = 0;
     private accum = 0;
 
-    constructor(canvas: HTMLCanvasElement, gui: GUI, scenes: Scenes<S, T, U, V>) {
+    constructor(canvas: HTMLCanvasElement, gui: GUI, scenes: Scenes<T, U, V>) {
         const view = createView(RENDER_WIDTH, RENDER_HEIGHT);
         this.renderer = new Renderer(canvas, view);
         this.input = new Input(view);
@@ -116,7 +115,7 @@ class Game<S extends string, T extends string, U extends ComponentMap<T>, V exte
         counter.renderEnd();
     }
 
-    private setScene(id: SceneID<S>): Promise<void> {
+    private setScene(id: SceneID<T>): Promise<void> {
         const { audio, scenes } = this;
         this.currentScene = this.loadingScene;
 
