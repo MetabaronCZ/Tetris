@@ -1,7 +1,7 @@
 import { DISTANCE_TO_PIXEL_RATIO } from 'engine/data/config';
 
 import { View } from 'engine/view';
-import { Camera } from 'engine/ecs/camera';
+import { Camera } from 'engine/ecs/entities/camera';
 import { Rectangle } from 'engine/geometry/rectangle';
 import { Vector2D, vec2 } from 'engine/geometry/vector';
 

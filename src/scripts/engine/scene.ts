@@ -6,8 +6,8 @@ import SpriteAtlas from 'engine/graphics/atlas';
 import GAudio, { TrackSource } from 'engine/audio';
 import Renderer, { Texture } from 'engine/graphics/renderer';
 
-import { Camera } from 'engine/ecs/camera';
 import { Entity } from 'engine/ecs/entity';
+import { Camera } from 'engine/ecs/entities/camera';
 import { ComponentMap } from 'engine/ecs/component';
 
 export interface SceneConf<T extends ComponentMap, U extends SpriteAtlas> {

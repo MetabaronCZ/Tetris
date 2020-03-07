@@ -3,10 +3,10 @@ import {
     DEBUG_SPRITE, DEBUG_POINT_SIZE, DEBUG_POINT_COLOR, DEBUG_OUTLINE_COLOR
 } from 'engine/data/config';
 
-import { Camera } from 'engine/ecs/camera';
 import { Color } from 'engine/graphics/color';
 import { Sprite } from 'engine/graphics/sprite';
 import { Outline } from 'engine/graphics/outline';
+import { Camera } from 'engine/ecs/entities/camera';
 import { Rectangle } from 'engine/geometry/rectangle';
 import { vec2, Vector2D } from 'engine/geometry/vector';
 import { Quad, updateQuad } from 'engine/graphics/quad';

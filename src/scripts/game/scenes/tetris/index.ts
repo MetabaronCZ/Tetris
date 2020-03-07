@@ -6,8 +6,8 @@ import atlasDefinition from 'game/data/atlas';
 
 import Input from 'engine/input';
 import GAudio from 'engine/audio';
-import { createCamera } from 'engine/ecs/camera';
 import { setColorAlpha } from 'engine/graphics/color';
+import { createCamera } from 'engine/ecs/entities/camera';
 
 import { GameGUI } from 'game/ui';
 import GameAtlas from 'game/atlas';

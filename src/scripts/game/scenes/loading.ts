@@ -1,4 +1,4 @@
-import { createCamera } from 'engine/ecs/camera';
+import { createCamera } from 'engine/ecs/entities/camera';
 
 import GAudio from 'engine/audio';
 import GameScene from 'game/scene';
