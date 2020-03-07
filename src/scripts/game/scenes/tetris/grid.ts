@@ -7,12 +7,12 @@ import {
     Piece, createPiece, checkPiece, placePiece, clearPiece
 } from 'game/scenes/tetris/piece';
 
+import { InfoState } from 'game/ui/components/Info/reducers';
+
 export type Phase = 'INIT' | 'RUNNING' | 'ANIMATING' | 'GAME_OVER';
 export type TileValue = 0 | 1;
 export type GridTiles = TileValue[][];
 type UserMove = 'NONE' | 'LEFT' | 'RIGHT' | 'DOWN';
-
-const getMaxStep = (speed: number): number => 10 * (MAX_SPEED + 1 - speed);
 
 class Grid {
     private readonly width: number;
@@ -43,27 +43,17 @@ class Grid {
         this.width = width;
         this.height = height;
         this.onSound = onSound;
-        this.maxStep = getMaxStep(this.speed);
+        this.maxStep = 0;
     }
 
-    public isPaused(): boolean {
-        return this.paused;
-    }
-
-    public getPhase(): Phase {
-        return this.phase;
-    }
-
-    public getScore(): number {
-        return this.score;
-    }
-
-    public getLines(): number {
-        return this.lines;
-    }
-
-    public getSpeed(): number {
-        return this.speed;
+    public getInfo(): InfoState {
+        return {
+            phase: this.phase,
+            paused: this.paused,
+            score: this.score,
+            lines: this.lines,
+            speed: this.speed
+        };
     }
 
     public getTiles(): GridTiles {
@@ -84,8 +74,6 @@ class Grid {
         if ('INIT' !== phase && 'GAME_OVER' !== phase) {
             return;
         }
-        this.generateGrid();
-
         this.phase = ('INIT' === phase ? 'RUNNING' : 'INIT');
         this.userMove = 'NONE';
         this.movePressed = 0;
@@ -98,7 +86,9 @@ class Grid {
         this.lines = 0;
         this.speed = 0;
         this.stepCount = 0;
-        this.maxStep = getMaxStep(this.speed);
+
+        this.generateGrid();
+        this.setMaxStep();
 
         onSound('START');
     }
@@ -113,33 +103,15 @@ class Grid {
     }
 
     public moveLeft(): void {
-        if (this.canAct()) {
-            if ('LEFT' !== this.userMove) {
-                this.movePressed = 0;
-            }
-            this.shouldMove = true;
-            this.userMove = 'LEFT';
-        }
+        this.initMove('LEFT');
     }
 
     public moveRight(): void {
-        if (this.canAct()) {
-            if ('RIGHT' !== this.userMove) {
-                this.movePressed = 0;
-            }
-            this.shouldMove = true;
-            this.userMove = 'RIGHT';
-        }
+        this.initMove('RIGHT');
     }
 
     public moveDown(): void {
-        if (this.canAct()) {
-            if ('DOWN' !== this.userMove) {
-                this.movePressed = 0;
-            }
-            this.shouldMove = true;
-            this.userMove = 'DOWN';
-        }
+        this.initMove('DOWN');
     }
 
     public rotate(): void {
@@ -149,9 +121,9 @@ class Grid {
     }
 
     public step(): void {
-        const { phase, piece, animation, maxStep, userMove, shouldMove, shouldRotate } = this;
+        const { animation, userMove, shouldRotate } = this;
 
-        if (!shouldMove) {
+        if (!this.shouldMove) {
             this.userMove = 'NONE';
         }
         this.shouldRotate = false;
@@ -160,7 +132,7 @@ class Grid {
             return;
         }
 
-        switch (phase) {
+        switch (this.phase) {
             case 'ANIMATING': {
                 if (!animation) {
                     throw new Error('No animation found');
@@ -185,12 +157,12 @@ class Grid {
                 }
 
                 // gravity movement
-                if (this.stepCount < maxStep) {
+                if (this.stepCount < this.maxStep) {
                     return;
                 }
                 this.stepCount = 0;
         
-                if (piece) {
+                if (this.piece) {
                     this.move('DOWN');
                     return;
                 }
@@ -229,8 +201,13 @@ class Grid {
     }
 
     private addPiece(): void {
+        // initial piece coords
+        const x = (this.width / 2) - 2;
+        const y = -1;
+
+        // create next piece
         this.piece = null;
-        this.nextPiece = this.nextPiece || createPiece();
+        this.nextPiece = this.nextPiece || createPiece(x, y);
 
         const { tiles, nextPiece } = this;
 
@@ -240,7 +217,7 @@ class Grid {
         placePiece(nextPiece, tiles);
 
         this.piece = nextPiece;
-        this.nextPiece = createPiece();
+        this.nextPiece = createPiece(x, y);
     }
 
     private replacePiece(newPiece: Piece): boolean {
@@ -301,7 +278,7 @@ class Grid {
                 this.speed = Math.floor(this.lines / 10);
                 this.speed = Math.min(this.speed, MAX_SPEED);
                 this.stepCount = 0;
-                this.maxStep = getMaxStep(this.speed);
+                this.setMaxStep();
         
                 // put back removed lines
                 while (lines) {
@@ -310,6 +287,20 @@ class Grid {
                     lines--;
                 }
             });
+        }
+    }
+
+    private setMaxStep(): void {
+        this.maxStep = 10 * (MAX_SPEED + 1 - this.speed);
+    }
+
+    private initMove(dir: UserMove): void {
+        if (this.canAct() && 'NONE' !== dir) {
+            if (dir !== this.userMove) {
+                this.movePressed = 0;
+            }
+            this.shouldMove = true;
+            this.userMove = dir;
         }
     }
 

@@ -1,17 +1,9 @@
-import { createCamera } from 'engine/ecs/entities/camera';
-
 import GAudio from 'engine/audio';
 import GameScene from 'game/scene';
 
 class LoadingScene extends GameScene {
     constructor(audio: GAudio) {
-        super({
-            audio,
-            camera: createCamera(),
-            sounds: [],
-            entities: [],
-            textures: []
-        });
+        super({ audio });
     }
 
     public handleInput(): void {

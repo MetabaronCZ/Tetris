@@ -14,9 +14,8 @@ interface CameraConf {
 }
 
 export const createCamera = (conf: CameraConf = {}): Camera => {
-    const entity = createEntity<CameraComponents>({
+    return createEntity<CameraComponents>({
         position: new Position(conf.x, conf.y),
         orientation: new Orientation(conf.ori)
     });
-    return entity as Camera;
 };

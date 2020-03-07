@@ -7,15 +7,15 @@ import GAudio, { TrackSource } from 'engine/audio';
 import Renderer, { Texture } from 'engine/graphics/renderer';
 
 import { Entity } from 'engine/ecs/entity';
-import { Camera } from 'engine/ecs/entities/camera';
 import { ComponentMap } from 'engine/ecs/component';
+import { Camera, createCamera } from 'engine/ecs/entities/camera';
 
 export interface SceneConf<T extends ComponentMap, U extends SpriteAtlas> {
     readonly audio: GAudio;
-    readonly camera: Camera;
-    readonly textures: U[];
-    readonly sounds: Array<[string, string]>;
-    readonly entities: Entity<Partial<T>>[];
+    readonly camera?: Camera;
+    readonly textures?: U[];
+    readonly sounds?: Array<[string, string]>;
+    readonly entities?: Entity<Partial<T>>[];
 }
 
 export type SceneAssets = [Texture[], TrackSource[]];
@@ -30,10 +30,10 @@ abstract class Scene<T extends string, U extends ComponentMap, V extends SpriteA
 
     constructor(conf: SceneConf<U, V>) {
         this.audio = conf.audio;
-        this.camera = conf.camera;
-        this.sounds = conf.sounds;
-        this.textures = conf.textures;
-        this.entities = conf.entities;
+        this.camera = conf.camera || createCamera();
+        this.sounds = conf.sounds || [];
+        this.textures = conf.textures || [];
+        this.entities = conf.entities || [];
     }
 
     public getNewScene(): T | null {

@@ -28,13 +28,11 @@ export const createTile = (conf: TileConf): Tile => {
     const color = createColor(255, 255, 255);
     const shape = createRectangle(conf.size, conf.size);
 
-    const entity = createEntity<TileComponents>({
+    return createEntity<TileComponents>({
         type: new TileType(conf.type),
         coordinates: new Coordinates(conf.cx, conf.cy),
         position: new Position(conf.x, conf.y),
         orientation: new Orientation(),
         visual: new Visual(conf.sprite, shape, color)
     });
-
-    return entity as Tile;
 };

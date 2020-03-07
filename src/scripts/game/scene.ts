@@ -8,17 +8,10 @@ import Renderer, { SpriteRenderData, OutlineRenderData } from 'engine/graphics/r
 import { CMap } from 'game/ecs';
 import { GameGUI } from 'game/ui';
 import GameAtlas from 'game/atlas';
-import TetrisScene from 'game/scenes/tetris';
-import LoadingScene from 'game/scenes/loading';
 
-export type GameSceneConf = SceneConf<CMap, GameAtlas>;
 type GameSceneID = 'TETRIS';
-
-export const scenes: Scenes<GameSceneID, CMap, GameAtlas> = {
-    LOADING: audio => new LoadingScene(audio),
-    INITIAL: audio => new TetrisScene(audio),
-    TETRIS: audio => new TetrisScene(audio)
-};
+export type GameSceneConf = SceneConf<CMap, GameAtlas>;
+export type GameScenes = Scenes<GameSceneID, CMap, GameAtlas>;
 
 abstract class GameScene extends Scene<GameSceneID, CMap, GameAtlas> {
     abstract renderGUI(gui: GameGUI): void;

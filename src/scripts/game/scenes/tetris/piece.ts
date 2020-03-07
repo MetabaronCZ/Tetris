@@ -1,13 +1,7 @@
 import { getRandomArrayItem } from 'engine/core/array';
 
-import { GRID_WIDTH, GRID_HEIGHT } from 'game/config';
-
 import pieces from 'game/data/pieces';
 import { GridTiles } from 'game/scenes/tetris/grid';
-
-// initial piece coords
-const initialX = (GRID_WIDTH / 2) - 2;
-const initialY = -1;
 
 const pieceTypes = ['O', 'I', 'S', 'Z', 'L', 'J', 'T'] as const;
 export type PieceType = typeof pieceTypes[number];
@@ -27,19 +21,21 @@ export interface Piece {
     rot: number;
 }
 
-export const createPiece = (type?: PieceType): Piece => {
+export const createPiece = (x: number, y: number, type?: PieceType): Piece => {
     type = type || getRandomArrayItem(pieceTypes);
     return {
+        x,
+        y,
         type,
         rot: 0,
-        x: initialX,
-        y: initialY,
         variants: pieces[type].length
     };
 };
 
 export const checkPiece = (piece: Piece, grid: GridTiles): boolean => {
     const pTiles = pieces[piece.type][piece.rot];
+    const width = grid[0].length;
+    const height = grid.length;
 
     for (let y = 0; y < 4; y++) {
         for (let x = 0; x < 4; x++) {
@@ -52,11 +48,11 @@ export const checkPiece = (piece: Piece, grid: GridTiles): boolean => {
             }
 
             // check out of grid
-            if (px < 0 || px > GRID_WIDTH - 1 || py < initialY || py > GRID_HEIGHT - 1) {
+            if (px < 0 || px > width - 1 || py < -1 || py > height - 1) {
                 return false;
             }
 
-            // check collission
+            // check collision
             if (py >= 0 && grid[py][px]) {
                 return false;
             }

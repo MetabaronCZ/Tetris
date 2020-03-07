@@ -7,7 +7,6 @@ import atlasDefinition from 'game/data/atlas';
 import Input from 'engine/input';
 import GAudio from 'engine/audio';
 import { setColorAlpha } from 'engine/graphics/color';
-import { createCamera } from 'engine/ecs/entities/camera';
 
 import { GameGUI } from 'game/ui';
 import GameAtlas from 'game/atlas';
@@ -42,7 +41,7 @@ const createWorld = (audio: GAudio): GameSceneConf => {
         }
     }
 
-    // next piece tiles
+    // nextPiece preview tiles
     for (let x = 0; x < 4; x++) {
         for (let y = 0; y < 4; y++) {
             const entity = createTile({
@@ -64,7 +63,6 @@ const createWorld = (audio: GAudio): GameSceneConf => {
 
     return {
         audio,
-        camera: createCamera(),
         entities: tiles,
         textures: [atlas],
         sounds: Object.entries(soundData)
@@ -152,13 +150,8 @@ class TetrisScene extends GameScene {
     }
 
     public renderGUI(gui: GameGUI): void {
-        const { grid } = this;
-        const phase = grid.getPhase();
-        const paused = grid.isPaused();
-        const score = grid.getScore();
-        const lines = grid.getLines();
-        const speed = grid.getSpeed();
-        gui.info.set(phase, paused, score, lines, speed);
+        const info = this.grid.getInfo();
+        gui.info.set(info);
     }
 }
 

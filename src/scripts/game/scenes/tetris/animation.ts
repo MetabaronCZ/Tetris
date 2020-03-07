@@ -2,7 +2,7 @@ type OnAnimationEnd = () => void;
 
 class TileAnimation {
     public readonly duration: number; // animation duration [in Grid steps]
-    public readonly rows: number[]; // tile row indexes to be animated
+    public readonly rows: number[]; // grid row indices to be animated
     private readonly onEnd: OnAnimationEnd;
 
     private frame = 0;
