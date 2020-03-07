@@ -3,10 +3,11 @@ import { createColor } from 'engine/graphics/color';
 import { Entity, createEntity } from 'engine/ecs/entity';
 import { createRectangle } from 'engine/geometry/rectangle';
 
+import Visual from 'engine/ecs/components/visual';
+import Position from 'engine/ecs/components/position';
+import Orientation from 'engine/ecs/components/orientation';
+
 import { CMap } from 'game/ecs';
-import Visual from 'game/ecs/components/visual';
-import Position from 'game/ecs/components/position';
-import Orientation from 'game/ecs/components/orientation';
 import Coordinates from 'game/ecs/components/coordinates';
 import TileType, { TileTypeID } from 'game/ecs/components/tile-type';
 

@@ -1,10 +1,10 @@
 import { Entity, createEntity } from 'engine/ecs/entity';
+import { EngineComponentMap } from 'engine/ecs/component';
 
-import { CMap } from 'game/ecs';
-import Position from 'game/ecs/components/position';
-import Orientation from 'game/ecs/components/orientation';
+import Position from 'engine/ecs/components/position';
+import Orientation from 'engine/ecs/components/orientation';
 
-type CameraComponents = Pick<CMap, 'position' | 'orientation'>;
+type CameraComponents = Pick<EngineComponentMap, 'position' | 'orientation'>;
 export type Camera = Entity<CameraComponents>;
 
 interface CameraConf {
