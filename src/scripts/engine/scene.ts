@@ -2,8 +2,8 @@ import { loadSound } from 'engine/core/sound';
 
 import { GUI } from 'engine/ui';
 import Input from 'engine/input';
-import GAudio, { TrackSource } from 'engine/audio';
 import SpriteAtlas from 'engine/graphics/atlas';
+import GAudio, { TrackSource } from 'engine/audio';
 import Renderer, { Texture } from 'engine/graphics/renderer';
 
 import { Camera } from 'engine/ecs/camera';
@@ -15,7 +15,7 @@ export interface SceneConf<T extends string, U extends ComponentMap<T>, V extend
     readonly camera: Camera;
     readonly textures: V[];
     readonly sounds: Array<[string, string]>;
-    readonly entities: Partial<Entity<T, U>>[];
+    readonly entities: Partial<Entity<U>>[];
 }
 
 export type SceneAssets = [Texture[], TrackSource[]];
@@ -25,7 +25,7 @@ abstract class Scene<S extends string, T extends string, U extends ComponentMap<
     protected readonly camera: Camera;
     protected readonly textures: V[];
     protected readonly sounds: Array<[string, string]>;
-    protected readonly entities: Partial<Entity<T, U>>[] = [];
+    protected readonly entities: Partial<Entity<U>>[] = [];
     protected newScene: S | null = null;
 
     constructor(conf: SceneConf<T, U, V>) {

@@ -1,4 +1,4 @@
-export type ComponentMap<T extends string> = {
+export type ComponentMap<T extends string = never> = {
     readonly [id in T]: Component;
 }
 

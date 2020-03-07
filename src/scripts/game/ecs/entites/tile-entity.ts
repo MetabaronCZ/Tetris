@@ -10,8 +10,8 @@ import Orientation from 'game/ecs/components/orientation';
 import Coordinates from 'game/ecs/components/coordinates';
 import TileType, { TileTypeID } from 'game/ecs/components/tile-type';
 
-type TileComponentID = 'position' | 'orientation' | 'coordinates' | 'type' | 'visual';
-export type Tile = Entity<TileComponentID, CMap>;
+type TileComponents = Pick<CMap, 'position' | 'orientation' | 'coordinates' | 'type' | 'visual'>;
+export type Tile = Entity<TileComponents>;
 
 interface TileConf {
     readonly type: TileTypeID;
@@ -25,13 +25,14 @@ interface TileConf {
 
 export const createTile = (conf: TileConf): Tile => {
     const color = createColor(255, 255, 255);
+    const shape = createRectangle(conf.size, conf.size);
 
-    const entity = createEntity<TileComponentID, CMap>({
+    const entity = createEntity<TileComponents>({
         type: new TileType(conf.type),
         coordinates: new Coordinates(conf.cx, conf.cy),
         position: new Position(conf.x, conf.y),
         orientation: new Orientation(),
-        visual: new Visual(conf.sprite, createRectangle(conf.size, conf.size), color)
+        visual: new Visual(conf.sprite, shape, color)
     });
 
     return entity as Tile;

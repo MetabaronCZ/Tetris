@@ -4,8 +4,8 @@ import { CMap } from 'game/ecs';
 import Position from 'game/ecs/components/position';
 import Orientation from 'game/ecs/components/orientation';
 
-type CameraComponentID = 'position' | 'orientation';
-export type Camera = Entity<CameraComponentID, CMap>;
+type CameraComponents = Pick<CMap, 'position' | 'orientation'>;
+export type Camera = Entity<CameraComponents>;
 
 interface CameraConf {
     readonly x?: number;
@@ -14,7 +14,7 @@ interface CameraConf {
 }
 
 export const createCamera = (conf: CameraConf = {}): Camera => {
-    const entity = createEntity<CameraComponentID, CMap>({
+    const entity = createEntity<CameraComponents>({
         position: new Position(conf.x, conf.y),
         orientation: new Orientation(conf.ori)
     });

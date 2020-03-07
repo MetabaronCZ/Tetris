@@ -1,4 +1,4 @@
-import { EntityBase } from 'engine/ecs/entity';
+import { Entity } from 'engine/ecs/entity';
 
 import Visual from 'game/ecs/components/visual';
 import Velocity from 'game/ecs/components/velocity';
@@ -21,4 +21,4 @@ export interface CMap {
 }
 
 export type ComponentID = keyof CMap;
-export type GameEntity = EntityBase & Partial<CMap>;
+export type GameEntity = Entity<Partial<CMap>>;
