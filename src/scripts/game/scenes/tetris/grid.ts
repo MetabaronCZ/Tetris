@@ -23,6 +23,7 @@ class Grid {
     private paused = false;
 
     private userMove: UserMove = 'NONE';
+    private movePressed = 0;
     private shouldMove = false;
     private shouldRotate = false;
 
@@ -87,6 +88,7 @@ class Grid {
 
         this.phase = ('INIT' === phase ? 'RUNNING' : 'INIT');
         this.userMove = 'NONE';
+        this.movePressed = 0;
         this.shouldMove = false;
         this.shouldRotate = false;
         this.paused = false;
@@ -112,6 +114,9 @@ class Grid {
 
     public moveLeft(): void {
         if (this.canAct()) {
+            if ('LEFT' !== this.userMove) {
+                this.movePressed = 0;
+            }
             this.shouldMove = true;
             this.userMove = 'LEFT';
         }
@@ -119,6 +124,9 @@ class Grid {
 
     public moveRight(): void {
         if (this.canAct()) {
+            if ('RIGHT' !== this.userMove) {
+                this.movePressed = 0;
+            }
             this.shouldMove = true;
             this.userMove = 'RIGHT';
         }
@@ -126,6 +134,9 @@ class Grid {
 
     public moveDown(): void {
         if (this.canAct()) {
+            if ('DOWN' !== this.userMove) {
+                this.movePressed = 0;
+            }
             this.shouldMove = true;
             this.userMove = 'DOWN';
         }
@@ -160,9 +171,10 @@ class Grid {
 
             case 'RUNNING': {
                 this.stepCount++;
+                this.movePressed++;
 
                 // user movement
-                if (0 === this.stepCount % INPUT_DELAY) {
+                if (0 === this.movePressed % INPUT_DELAY) {
                     this.move(userMove);
                     this.shouldMove = false;
                 }
