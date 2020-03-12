@@ -6,4 +6,4 @@ Tetris game made with WebGL, React.js, Electron.io
 - ```npm i``` - install dependencies
 - ```npm run build``` - build app from source files
 - ```npm start``` - run game via Electron.io window
-- play
+- play :video_game:
