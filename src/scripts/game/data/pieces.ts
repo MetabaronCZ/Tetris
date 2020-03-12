@@ -1,10 +1,18 @@
-import { PieceType, PieceTiles } from 'game/scenes/tetris/piece';
+export const pieceTypes = ['O', 'I', 'S', 'Z', 'L', 'J', 'T'] as const;
+export type PieceType = typeof pieceTypes[number];
+
+type PieceTiles = [
+    [0 | 1, 0 | 1, 0 | 1, 0 | 1],
+    [0 | 1, 0 | 1, 0 | 1, 0 | 1],
+    [0 | 1, 0 | 1, 0 | 1, 0 | 1],
+    [0 | 1, 0 | 1, 0 | 1, 0 | 1]
+];
 
 type Pieces = {
     readonly [id in PieceType]: PieceTiles[];
-}
+};
 
-const pieces: Pieces = {
+export const pieces: Pieces = {
     O: [
         [
             [0, 0, 0, 0],
@@ -134,5 +142,3 @@ const pieces: Pieces = {
         ]
     ]
 };
-
-export default pieces;

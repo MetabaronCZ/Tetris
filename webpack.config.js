@@ -15,7 +15,7 @@ module.exports = env => {
     let watch = false;
     let devtool = false;
 
-    if ( 'dev' === env ){
+    if ('dev' === env) {
         mode = 'development';
         watch = true;
         devtool = 'inline-source-map';
@@ -61,7 +61,7 @@ module.exports = env => {
                             loader: 'eslint-loader',
                             options: {
                                 failOnError: true,
-                                cache: true
+                                cache: false
                             }
                         }
                     ],
@@ -80,7 +80,7 @@ module.exports = env => {
         plugins: [
             // disable React DevTools offer console message
             new webpack.DefinePlugin({
-                '__REACT_DEVTOOLS_GLOBAL_HOOK__': '({ isDisabled: true })'
+                __REACT_DEVTOOLS_GLOBAL_HOOK__: '({ isDisabled: true })'
             }),
             new HtmlWebPackPlugin({
                 template: `${pathTemplates}/index.html`,

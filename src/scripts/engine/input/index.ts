@@ -7,10 +7,10 @@ import Mouse, { MouseButtonID } from 'engine/input/mouse';
 
 const mouseInView = (x: number, y: number, view: View): boolean => {
     return (
-        x >= view.x &&
-        y >= view.y &&
-        x <= view.x + view.width &&
-        y <= view.y + view.height
+        x >= view.x
+        && y >= view.y
+        && x <= view.x + view.width
+        && y <= view.y + view.height
     );
 };
 

@@ -13,7 +13,7 @@ export const getScore = (speed: number, lines: number): number => {
     const base = scoreTable[lines] || null;
 
     if (null === base) {
-        throw new Error('Invalid line count: ' + lines);
+        throw new Error(`Invalid line count: + ${lines}`);
     }
     return base * (speed + 1);
 };

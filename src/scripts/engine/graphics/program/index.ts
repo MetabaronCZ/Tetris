@@ -83,6 +83,9 @@ export const createRenderProgram = <T extends string, U extends string | null = 
     const attributeLocations: AttributeLocations<T> = {};
 
     for (const name in conf.attributes) {
+        if (!Object.prototype.hasOwnProperty.call(conf.attributes, name)) {
+            continue;
+        }
         const attr = conf.attributes[name];
 
         attributeLocations[name] = {
@@ -99,6 +102,9 @@ export const createRenderProgram = <T extends string, U extends string | null = 
 
     if (conf.uniforms) {
         for (const name in conf.uniforms) {
+            if (!Object.prototype.hasOwnProperty.call(conf.uniforms, name)) {
+                continue;
+            }
             uniformLocations[name] = {
                 location: gl.getUniformLocation(program, name)
             };
@@ -124,10 +130,13 @@ export const createRenderProgram = <T extends string, U extends string | null = 
         // join data from all objects
         for (const obj of data.objects) {
             for (const attr in obj) {
+                if (!Object.prototype.hasOwnProperty.call(obj, attr)) {
+                    continue;
+                }
                 const value = obj[attr];
 
                 if (value.length !== conf.attributes[attr].size) {
-                    throw new Error(`Rendered program object attribute ${attr} has invalid value length: ` + value.length);
+                    throw new Error(`Rendered program object attribute ${attr} has invalid value length: ${value.length}`);
                 }
                 vertices.push(...obj[attr]);
             }
@@ -143,6 +152,9 @@ export const createRenderProgram = <T extends string, U extends string | null = 
 
         // set attributes
         for (const name in attributeLocations) {
+            if (!Object.prototype.hasOwnProperty.call(attributeLocations, name)) {
+                continue;
+            }
             const a = attributeLocations[name];
 
             if (a) {

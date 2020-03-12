@@ -1,4 +1,4 @@
-import { EngineComponentMap } from 'engine/ecs/component';
+import { EngineComponentMap } from 'engine/ecs/shared';
 
 import TileType from 'game/ecs/components/tile-type';
 import Coordinates from 'game/ecs/components/coordinates';

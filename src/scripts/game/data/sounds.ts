@@ -1,4 +1,4 @@
-export const soundData = {
+export const sounds = {
     DROP: '/drop.mp3',
     LINE: '/line.mp3',
     LINE4: '/line4.mp3',
@@ -8,3 +8,4 @@ export const soundData = {
     PAUSE: '/pause.mp3',
     GAME_OVER: '/gameover.mp3'
 };
+export type SoundID = keyof typeof sounds;

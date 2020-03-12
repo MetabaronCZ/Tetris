@@ -1,17 +1,24 @@
 import { MAX_SPEED, ANIM_DURATION, INPUT_DELAY } from 'game/config';
 
-import { OnSound } from 'game/scenes/tetris';
+import { pieces } from 'game/data/pieces';
+import { SoundID } from 'game/data/sounds';
+
 import { getScore } from 'game/scenes/tetris/score';
 import TileAnimation from 'game/scenes/tetris/animation';
-import {
-    Piece, createPiece, checkPiece, placePiece, clearPiece
-} from 'game/scenes/tetris/piece';
-
-import { InfoState } from 'game/ui/components/Info/reducers';
+import { Piece, createPiece } from 'game/scenes/tetris/piece';
 
 export type Phase = 'INIT' | 'RUNNING' | 'ANIMATING' | 'GAME_OVER';
 export type TileValue = 0 | 1;
 export type GridTiles = TileValue[][];
+
+export interface GridInfo {
+    readonly phase: Phase;
+    readonly paused: boolean;
+    readonly score: number;
+    readonly lines: number;
+    readonly speed: number;
+}
+type OnSound = (id: SoundID) => void;
 type UserMove = 'NONE' | 'LEFT' | 'RIGHT' | 'DOWN';
 
 class Grid {
@@ -46,7 +53,7 @@ class Grid {
         this.maxStep = 0;
     }
 
-    public getInfo(): InfoState {
+    public getInfo(): GridInfo {
         return {
             phase: this.phase,
             paused: this.paused,
@@ -138,7 +145,7 @@ class Grid {
                     throw new Error('No animation found');
                 }
                 animation.step();
-                return;
+                break;
             }
 
             case 'RUNNING': {
@@ -161,20 +168,19 @@ class Grid {
                     return;
                 }
                 this.stepCount = 0;
-        
+
                 if (this.piece) {
                     this.move('DOWN');
                     return;
                 }
                 this.addPiece();
-        
+
                 if (!this.piece) {
                     // force game over
                     this.phase = 'GAME_OVER';
                     this.onSound('GAME_OVER');
-                    return;
                 }
-                return;
+                break;
             }
 
             default:
@@ -209,37 +215,101 @@ class Grid {
         this.piece = null;
         this.nextPiece = this.nextPiece || createPiece(x, y);
 
-        const { tiles, nextPiece } = this;
+        const { nextPiece } = this;
 
-        if (!checkPiece(nextPiece, tiles)) {
+        if (!this.checkPiece(nextPiece)) {
             return;
         }
-        placePiece(nextPiece, tiles);
+        this.placePiece(nextPiece);
 
         this.piece = nextPiece;
         this.nextPiece = createPiece(x, y);
     }
 
     private replacePiece(newPiece: Piece): boolean {
-        const { piece, tiles } = this;
+        const { piece } = this;
 
         // clear actual piece (prevent actual vs new piece collision)
         if (piece) {
-            clearPiece(piece, tiles);
+            this.clearPiece(piece);
         }
 
-        if (checkPiece(newPiece, tiles)) {
+        if (this.checkPiece(newPiece)) {
             // place new piece
-            placePiece(newPiece, tiles);
+            this.placePiece(newPiece);
             this.piece = newPiece;
             return true;
+        }
 
-        } else {
-            // return actual piece (if exists)
-            if (piece) {
-                placePiece(piece, tiles);
+        // return actual piece (if exists)
+        if (piece) {
+            this.placePiece(piece);
+        }
+        return false;
+    }
+
+    private checkPiece(piece: Piece): boolean {
+        const { tiles } = this;
+
+        const pTiles = pieces[piece.type][piece.rot];
+        const width = tiles[0].length;
+        const height = tiles.length;
+
+        for (let y = 0; y < 4; y++) {
+            for (let x = 0; x < 4; x++) {
+                const px = piece.x + x;
+                const py = piece.y + y;
+
+                // check only solid parts of the piece
+                if (!pTiles[y][x]) {
+                    continue;
+                }
+
+                // check out of grid
+                if (px < 0 || px > width - 1 || py < -1 || py > height - 1) {
+                    return false;
+                }
+
+                // check collision
+                if (py >= 0 && tiles[py][px]) {
+                    return false;
+                }
             }
-            return false;
+        }
+        return true;
+    }
+
+    private placePiece(piece: Piece): void {
+        const pTiles = pieces[piece.type][piece.rot];
+        const { tiles } = this;
+
+        for (let y = 0; y < 4; y++) {
+            for (let x = 0; x < 4; x++) {
+                const value = pTiles[y][x];
+                const px = piece.x + x;
+                const py = piece.y + y;
+
+                if (!value) {
+                    continue;
+                }
+
+                if (py >= 0) {
+                    tiles[py][px] = value;
+                }
+            }
+        }
+    }
+
+    private clearPiece(piece: Piece): void {
+        const pTiles = pieces[piece.type][piece.rot];
+        const { tiles } = this;
+
+        for (let y = 0; y < 4; y++) {
+            for (let x = 0; x < 4; x++) {
+                if (piece.y + y >= 0 && pTiles[y][x]) {
+                    tiles[piece.y + y][piece.x + x] = 0;
+                }
+            }
         }
     }
 
@@ -273,13 +343,13 @@ class Grid {
                 const score = getScore(this.speed, lines);
                 this.lines += lines;
                 this.score += score;
-    
+
                 // recalc game speed
                 this.speed = Math.floor(this.lines / 10);
                 this.speed = Math.min(this.speed, MAX_SPEED);
                 this.stepCount = 0;
                 this.setMaxStep();
-        
+
                 // put back removed lines
                 while (lines) {
                     const row = this.createRow();
@@ -315,11 +385,11 @@ class Grid {
         switch (userMove) {
             case 'LEFT':
                 newPiece.x--;
-                
+
                 if (this.replacePiece(newPiece)) {
                     onSound('MOVE');
                 }
-                return;
+                break;
 
             case 'RIGHT':
                 newPiece.x++;
@@ -327,7 +397,7 @@ class Grid {
                 if (this.replacePiece(newPiece)) {
                     onSound('MOVE');
                 }
-                return;
+                break;
 
             case 'DOWN':
                 newPiece.y++;
@@ -340,7 +410,7 @@ class Grid {
 
                 onSound('DROP');
                 this.handleLines();
-                return;
+                break;
 
             default:
                 // do nothing

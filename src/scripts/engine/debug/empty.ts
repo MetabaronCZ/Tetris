@@ -1,6 +1,6 @@
 import StatCounter from 'engine/debug';
 
-const onUpdate = (): void => void(0);
+const onUpdate = (): void => undefined;
 
 class EmptyCounter extends StatCounter {
     constructor() {

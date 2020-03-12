@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { GameGUIState } from 'game/ui/store';
+import { GameGUIState } from 'game/ui/reducers';
 
 import Info from 'game/ui/components/Info';
 import Intro from 'game/ui/components/Intro';

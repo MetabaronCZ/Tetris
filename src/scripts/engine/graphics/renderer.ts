@@ -9,8 +9,8 @@ import { Outline } from 'engine/graphics/outline';
 import { Camera } from 'engine/ecs/entities/camera';
 import { Rectangle } from 'engine/geometry/rectangle';
 import { vec2, Vector2D } from 'engine/geometry/vector';
-import { Quad, updateQuad } from 'engine/graphics/quad';
-import { View, pointInView, quadInView, updateView } from 'engine/view';
+import { View, pointInView, updateView } from 'engine/view';
+import { Quad, quadInView, shapeQuad } from 'engine/graphics/quad';
 
 import { renderPoints, PointRender, PointRenderObject } from 'engine/graphics/program/point';
 import { renderSprites, SpriteRender, SpriteRenderObject } from 'engine/graphics/program/sprite';
@@ -38,6 +38,25 @@ const getOutlineRatio = (view: View, shape: Rectangle): [number, number] => {
     return [outWidth, outHeight];
 };
 
+export const updateQuad = (quad: Quad, shape: Rectangle, position: Vector2D, orientation: number, view: View, camera: Camera): void => {
+    // set quad to default vertex positions defined by given shape
+    shapeQuad(quad, shape);
+
+    for (const vertex of quad) {
+        // update-to-parent
+        vec2.rotate(vertex, -orientation); // rotate vetices around entity center (clock-wise)
+        vec2.add(vertex, position); // move vertices to entity center
+
+        // update-to-camera
+        vec2.rotate(vertex, camera.orientation.get()); // rotate vetices around camera center (anti clock-wise)
+        vec2.sub(vertex, camera.position.get()); // move vertices opposite to camera position
+
+        // scale-to-view
+        vec2.scale(vertex, view.scale); // scale sprites to view
+        vec2.scale(vertex, DISTANCE_TO_PIXEL_RATIO); // scale game meters to pixels
+    }
+};
+
 const updateOutlineData = (data: OutlineRenderData[], view: View, camera: Camera, target: OutlineRenderObject[], isAxes: boolean): void => {
     // reset outlines render data
     target.length = 0;
@@ -46,7 +65,7 @@ const updateOutlineData = (data: OutlineRenderData[], view: View, camera: Camera
     for (const [pos, ori, outline] of data) {
         const { vertices, shape, uv } = outline;
         updateQuad(vertices, shape, pos, ori, view, camera);
-    
+
         if (!isAxes && !quadInView(vertices)) {
             continue;
         }
@@ -122,12 +141,12 @@ class Renderer {
         this.resize(view);
 
         gl.viewport(view.x, view.y, view.width, view.height);
-    
+
         gl.enable(gl.BLEND);
         gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-    
+
         gl.clearColor(1, 1, 1, 1);
-        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);        
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     }
 
     public renderSpriteData(data: SpriteRenderData[], view: View, camera: Camera): void {
@@ -148,7 +167,7 @@ class Renderer {
                     a_position: vertex,
                     a_texcoord: sprite.uv[i],
                     a_color: color
-                });                
+                });
             });
         }
 
@@ -205,7 +224,7 @@ class Renderer {
             vec2.sub(center, camera.position.get());
             vec2.scale(center, view.scale);
             vec2.scale(center, DISTANCE_TO_PIXEL_RATIO);
-        
+
             if (pointInView(center)) {
                 points.push({
                     a_position: center

@@ -33,7 +33,7 @@ const rotation = (angle: number): Matrix3D => {
         +0, +0, +1
     ];
 };
- 
+
 const scaling = (scale: Vector2D): Matrix3D => {
     const [x, y] = scale;
     return [
@@ -64,7 +64,7 @@ const multiply = (m1: Matrix3D, m2: Matrix3D): Matrix3D => {
     const b31 = m2[2 * 3 + 0];
     const b32 = m2[2 * 3 + 1];
     const b33 = m2[2 * 3 + 2];
- 
+
     return [
         b11 * a11 + b12 * a21 + b13 * a31,
         b11 * a12 + b12 * a22 + b13 * a32,
@@ -88,8 +88,8 @@ const rotate = (m: Matrix3D, angle: number): Matrix3D => {
     return multiply(m, r);
 };
 
-const scale = (m: Matrix3D, scale: Vector2D): Matrix3D => {
-    const s = scaling(scale);
+const scale = (m: Matrix3D, value: Vector2D): Matrix3D => {
+    const s = scaling(value);
     return multiply(m, s);
 };
 

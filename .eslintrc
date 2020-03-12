@@ -1,54 +1,50 @@
 {
-	"extends":  [
-		"eslint:recommended"
+    "extends": [
+        "airbnb-typescript",
+        "plugin:import/errors",
+        "plugin:import/warnings",
+        "plugin:import/typescript"
     ],
     "env": {
+        "browser": true,
         "node": true,
         "es6": true
     },
-	"rules":  {
-        "space-infix-ops": ["error"],
-		"arrow-parens": ["error", "as-needed"],
-        "quotes": ["error", "single"],
-        "indent": ["error", 4, { "SwitchCase": 1 }],
-        "comma-dangle": ["error", "never"],
-        "semi": ["error", "always"]
+    "parserOptions": {
+        "project": "./tsconfig.json"
     },
-    "overrides": [
-        {
-            "files": ["**/*.ts", "**/*.tsx"],
-            "parser": "@typescript-eslint/parser",
-            "parserOptions": {
-                "ecmaFeatures": {
-                    "jsx": true
-                }
-            },
-            "settings": {
-                "react": {
-                    "version": "detect"
-                }
-            },
-            "extends": [
-                "plugin:react/recommended",
-                "plugin:@typescript-eslint/recommended"
-            ],
-            "plugins": [
-                "react",
-                "@typescript-eslint"
-            ],
-            "env": {
-                "browser": true
-            },
-            "rules": {
-                "jsx-quotes": ["error", "prefer-double"],
-                "react/prop-types": ["off"],
-                "react/jsx-equals-spacing": ["error", "never"],
-                "react/jsx-indent": ["error", 4, { "checkAttributes": true, "indentLogicalExpressions": true }],
-                "react/no-unescaped-entities": ["off"],
-                "@typescript-eslint/camelcase": ["off"],
-                "@typescript-eslint/no-explicit-any": ["off"],
-                "@typescript-eslint/explicit-function-return-type": ["error", { "allowExpressions": true }]
-            }
+    "settings": {
+        "import/resolver": {
+            "typescript": {}
         }
-    ]
+    },
+    "rules": {
+        "yoda": ["off"],
+        "max-len": ["off"],
+        "no-bitwise": ["off"],
+        "no-iterator": ["off"],
+        "no-continue": ["off"],
+        "no-plusplus": ["off"],
+        "arrow-body-style": ["off"],
+        "space-infix-ops": ["error"],
+        "no-param-reassign": ["off"],
+        "no-restricted-syntax": ["off"],
+        "object-curly-newline": ["off"],
+        "prefer-destructuring": ["off"],
+        "class-methods-use-this": ["off"],
+        "comma-dangle": ["error", "never"],
+        "arrow-parens": ["error", "as-needed"],
+        "linebreak-style": ["error", "windows"],
+        "lines-between-class-members": ["off"],
+
+        "react/sort-comp": ["off"],
+        "react/prop-types": ["off"],
+        "react/jsx-indent": ["error", 4, { "checkAttributes": true, "indentLogicalExpressions": true }],
+        "react/jsx-one-expression-per-line": ["off"],
+
+        "import/newline-after-import": ["off"],
+        "import/prefer-default-export": ["off"],
+
+        "@typescript-eslint/indent": ["error", 4, { "SwitchCase": 1 }]
+    }
 }

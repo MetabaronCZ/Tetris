@@ -1,9 +1,6 @@
-import { DISTANCE_TO_PIXEL_RATIO } from 'engine/data/config';
-
-import { View } from 'engine/view';
-import { Camera } from 'engine/ecs/entities/camera';
 import { Rectangle } from 'engine/geometry/rectangle';
 import { Vector2D, vec2 } from 'engine/geometry/vector';
+import { viewVertices, pointInView } from 'engine/view';
 
 export type Quad = Readonly<[Vector2D, Vector2D, Vector2D, Vector2D, Vector2D, Vector2D]>;
 
@@ -14,7 +11,7 @@ export const createQuad = (): Quad => {
     ];
 };
 
-const shapeQuad = (quad: Quad, shape: Rectangle): void => {
+export const shapeQuad = (quad: Quad, shape: Rectangle): void => {
     const w2 = shape.width / 2;
     const h2 = shape.height / 2;
 
@@ -31,21 +28,40 @@ const shapeQuad = (quad: Quad, shape: Rectangle): void => {
     }
 };
 
-export const updateQuad = (quad: Quad, shape: Rectangle, position: Vector2D, orientation: number, view: View, camera: Camera): void => {
-    // set quad to default vertex positions defined by given shape
-    shapeQuad(quad, shape);
-        
-    for (const vertex of quad) {
-        // update-to-parent
-        vec2.rotate(vertex, -orientation); // rotate vetices around entity center (clock-wise)
-        vec2.add(vertex, position); // move vertices to entity center
-
-        // update-to-camera
-        vec2.rotate(vertex, camera.orientation.get()); // rotate vetices around camera center (anti clock-wise)
-        vec2.sub(vertex, camera.position.get()); // move vertices opposite to camera position
-
-        // scale-to-view
-        vec2.scale(vertex, view.scale); // scale sprites to view
-        vec2.scale(vertex, DISTANCE_TO_PIXEL_RATIO); // scale game meters to pixels
+export const quadInView = (vertices: Quad): boolean => {
+    // check rectangle vertices in view
+    for (let i = 0, imax = vertices.length; i < imax; i++) {
+        if (3 === i || 4 === i) {
+            continue; // duplicite vertices
+        }
+        if (pointInView(vertices[i])) {
+            return true;
+        }
     }
+
+    // check view corners in rectangle
+    const ax = vertices[0][0];
+    const ay = vertices[0][1];
+    const bx = vertices[1][0];
+    const by = vertices[1][1];
+    const cx = vertices[5][0];
+    const cy = vertices[5][1];
+
+    const ABx = bx - ax;
+    const ABy = by - ay;
+    const BCx = cx - bx;
+    const BCy = cy - by;
+    const dotAB = ABx * ABx + ABy * ABy;
+    const dotBC = BCx * BCx + BCy * BCy;
+
+    for (const v of viewVertices) {
+        const dotABAV = ABx * (v[0] - ax) + ABy * (v[1] - ay);
+        const dotBCBV = BCx * (v[0] - bx) + BCy * (v[1] - by);
+
+        if (dotABAV >= 0 && dotAB >= dotABAV && dotBCBV >= 0 && dotBC >= dotBCBV) {
+            return true;
+        }
+    }
+
+    return false;
 };

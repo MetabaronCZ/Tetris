@@ -1,14 +1,14 @@
 import React from 'react';
-import { combineReducers } from 'redux';
 
 import { GUI, initGUI } from 'engine/ui';
 import { initStore } from 'engine/ui/store';
 
-import { GameAPIState, GameGUIStore, GameGUIActions } from 'game/ui/store';
+import { GameGUIStore } from 'game/ui/store';
 
 import Router from 'game/ui/components/Router';
+import { gameReducers } from 'game/ui/reducers';
 import { setInfo } from 'game/ui/components/Info/actions';
-import { infoReducer, InfoState } from 'game/ui/components/Info/reducers';
+import { InfoState } from 'game/ui/components/Info/state';
 
 interface GameAPI {
     readonly info: {
@@ -21,10 +21,6 @@ const gameAPI = (store: GameGUIStore): GameAPI => ({
     info: {
         set: info => store.dispatch(setInfo(info))
     }
-});
-
-const gameReducers = combineReducers<GameAPIState, GameGUIActions>({
-    info: infoReducer
 });
 
 export const initGameGUI = (root: HTMLDivElement): GameGUI => {

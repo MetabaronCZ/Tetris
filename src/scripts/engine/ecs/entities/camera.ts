@@ -1,5 +1,5 @@
+import { EngineComponentMap } from 'engine/ecs/shared';
 import { Entity, createEntity } from 'engine/ecs/entity';
-import { EngineComponentMap } from 'engine/ecs/component';
 
 import Position from 'engine/ecs/components/position';
 import Orientation from 'engine/ecs/components/orientation';

@@ -1,5 +1,5 @@
-import { GameGUIAction } from 'game/ui/store';
-import { InfoState } from 'game/ui/components/info/reducers';
+import { GameGUIAction } from 'game/ui/actions';
+import { InfoState } from 'game/ui/components/Info/state';
 
 type SetInfo = GameGUIAction<'INFO', InfoState>;
 

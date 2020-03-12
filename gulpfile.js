@@ -1,3 +1,4 @@
+/* eslint no-console: "off" */
 const del = require('del');
 const gulp = require('gulp');
 const sass = require('gulp-sass');
@@ -100,13 +101,17 @@ const taskScripts = cb => {
             if (err.details) {
                 console.error(err.details);
             }
-            return (isFirstRun ? cb() : undefined);
+            if (isFirstRun) {
+                cb();
+            }
+            return;
         }
         console.log(
             stats.toString({
+                children: false,
+                modules: false,
                 colors: true,
-                hash: false,
-                modules: false
+                hash: false
             })
         );
         console.log('-----------------------------------');
@@ -130,7 +135,12 @@ const taskWatch = cb => {
 };
 
 // build app
-const build = gulp.series(taskClear, taskFonts, taskImages, taskSounds, taskStylelint, taskStyles, taskScripts);
+const build = gulp.series(
+    taskClear,
+    taskFonts, taskImages, taskSounds,
+    taskStylelint, taskStyles,
+    taskScripts
+);
 
 // develop app (set watch before build, because "watch mode" in Webpack)
 const dev = gulp.series(taskWatch, build);

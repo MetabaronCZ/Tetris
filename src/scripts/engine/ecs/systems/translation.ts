@@ -1,8 +1,7 @@
-import { Entity } from 'engine/ecs/entity';
-import { EngineComponentMap } from 'engine/ecs/component';
+import { EngineEntity } from 'engine/ecs/shared';
 
 // move entities
-export const translate = (entity: Entity<EngineComponentMap>): void => {
+export const translate = (entity: EngineEntity): void => {
     if (!entity.position || !entity.velocity || !entity.velocity.isEnabled()) {
         return;
     }

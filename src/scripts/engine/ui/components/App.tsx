@@ -7,9 +7,9 @@ import { GUIStore } from 'engine/ui/store';
 import Debug from 'engine/ui/components/Debug';
 
 const contentStyles: CSSProperties = {
-    maxWidth: RENDER_WIDTH + 'px',
-    width: 100 * (RENDER_WIDTH / RENDER_HEIGHT) + 'vh',
-    maxHeight: 100 * (RENDER_HEIGHT / RENDER_WIDTH) + 'vw'
+    maxWidth: `${RENDER_WIDTH}px`,
+    width: `${100 * (RENDER_WIDTH / RENDER_HEIGHT)}vh`,
+    maxHeight: `${100 * (RENDER_HEIGHT / RENDER_WIDTH)}vw`
 };
 
 interface Props {

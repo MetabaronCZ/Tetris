@@ -57,23 +57,25 @@ class UpdateCounter extends StatCounter {
     }
 
     private loop(): void {
-        setInterval(() => {
-            const { ups, fps } = this.data;
+        setInterval(
+            () => {
+                const { ups, fps } = this.data;
 
-            this.onUpdate({
-                ups: {
-                    value: ups.count,
-                    avg: ups.duration / ups.count
-                },
-                fps: {
-                    value: fps.count,
-                    avg: fps.duration / fps.count
-                }
-            });
+                this.onUpdate({
+                    ups: {
+                        value: ups.count,
+                        avg: ups.duration / ups.count
+                    },
+                    fps: {
+                        value: fps.count,
+                        avg: fps.duration / fps.count
+                    }
+                });
 
-            this.data = getData();
-
-        }, COUNTER_INTERVAL);
+                this.data = getData();
+            },
+            COUNTER_INTERVAL
+        );
     }
 }
 

@@ -1,8 +1,7 @@
-import { Entity } from 'engine/ecs/entity';
-import { EngineComponentMap } from 'engine/ecs/component';
+import { EngineEntity } from 'engine/ecs/shared';
 
 // rotate entites
-export const rotate = (entity: Entity<EngineComponentMap>): void => {
+export const rotate = (entity: EngineEntity): void => {
     if (!entity.orientation || !entity.angularVelocity || !entity.angularVelocity.isEnabled()) {
         return;
     }

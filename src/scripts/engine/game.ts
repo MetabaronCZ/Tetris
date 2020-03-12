@@ -128,6 +128,7 @@ class Game<T extends string, U extends ComponentMap, V extends SpriteAtlas> {
                 this.audio.load(sounds);
                 this.currentScene = scene;
             })
+            /* eslint no-console: "off" */
             .catch(console.error);
     }
 }

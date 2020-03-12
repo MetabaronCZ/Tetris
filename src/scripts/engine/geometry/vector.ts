@@ -55,13 +55,13 @@ const rotate = (vec: Vector2D, angle: number, center?: Vector2D): void => {
     vec[1] = py + cy;
 };
 
-const scale = (vec: Vector2D, scale: Vector2D | number): void => {
-    if (scale instanceof Array) {
-        vec[0] *= scale[0];
-        vec[1] *= scale[1];
+const scale = (vec: Vector2D, value: Vector2D | number): void => {
+    if (value instanceof Array) {
+        vec[0] *= value[0];
+        vec[1] *= value[1];
     } else {
-        vec[0] *= scale;
-        vec[1] *= scale;
+        vec[0] *= value;
+        vec[1] *= value;
     }
 };
 

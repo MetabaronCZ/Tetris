@@ -28,7 +28,7 @@ export const createProgram = (gl: WebGL2RenderingContext, vertexShader: WebGLSha
     gl.linkProgram(program);
 
     if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-        const err = 'Unable to link shader program: ' + gl.getProgramInfoLog(program);
+        const err = `Unable to link shader program: ${gl.getProgramInfoLog(program)}`;
         gl.deleteProgram(program);
         throw new Error(err);
     }

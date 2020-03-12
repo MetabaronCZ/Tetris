@@ -12,7 +12,7 @@ export const DISTANCE_TO_PIXEL_RATIO = 32 / 1; // how many pixel makes one in-ga
 
 // game loop
 const UPS = 100; // ideal number of updates per second
-export const UPDATE_TICK = 1000 / UPS; // preffered length of one update 
+export const UPDATE_TICK = 1000 / UPS; // preffered length of one update
 
 // debug info
 export const DEBUG_SPRITE = false;

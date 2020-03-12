@@ -1,7 +1,7 @@
 import { GRID_WIDTH, GRID_HEIGHT, SPRITE_SIZE } from 'game/config';
 
-import pieces from 'game/data/pieces';
-import { soundData } from 'game/data/sounds';
+import { sounds } from 'game/data/sounds';
+import { pieces } from 'game/data/pieces';
 import atlasDefinition from 'game/data/atlas';
 
 import Input from 'engine/input';
@@ -16,9 +16,6 @@ import { Tile, createTile } from 'game/ecs/entites/tile-entity';
 
 const OFF_LEFT = (SPRITE_SIZE * GRID_WIDTH - 1) / 2;
 const OFF_TOP = (SPRITE_SIZE * GRID_HEIGHT - 1) / 2;
-
-type SoundID = keyof typeof soundData;
-export type OnSound = (id: SoundID) => void;
 
 const createWorld = (audio: GAudio): GameSceneConf => {
     const atlas = new GameAtlas(atlasDefinition);
@@ -65,7 +62,7 @@ const createWorld = (audio: GAudio): GameSceneConf => {
         audio,
         entities: tiles,
         textures: [atlas],
-        sounds: Object.entries(soundData)
+        sounds: Object.entries(sounds)
     };
 };
 
@@ -129,13 +126,12 @@ class TetrisScene extends GameScene {
                 // handle grid tile
                 const value = tiles[cy][cx];
                 visual.setSprite(value ? atlas.sprites.PIECE : atlas.sprites.TILE);
-    
+
                 if (animation && animation.rows.includes(cy)) {
                     setColorAlpha(visual.color, 1 - progress);
                 } else {
                     setColorAlpha(visual.color, 1.0);
                 }
-
             } else {
                 // handle next piece tile
                 let value = 0;

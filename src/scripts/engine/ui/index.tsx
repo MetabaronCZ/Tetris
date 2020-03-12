@@ -5,7 +5,7 @@ import { GUIStore } from 'engine/ui/store';
 
 import App from 'engine/ui/components/App';
 import { setDebug } from 'engine/ui/components/Debug/actions';
-import { DebugState } from 'engine/ui/components/debug/reducers';
+import { DebugState } from 'engine/ui/components/Debug/state';
 
 interface GUIAPI {
     readonly debug: {
@@ -15,7 +15,7 @@ interface GUIAPI {
 
 export type GUI<T extends {} = {}> = GUIAPI & {
     readonly [id in keyof T]: T[id];
-}
+};
 
 interface GUIConf<T extends {}, U extends {}, V extends string> {
     readonly root: HTMLDivElement;

@@ -1,10 +1,19 @@
 import { combineReducers, ReducersMapObject, Reducer } from 'redux';
 
 import { GUIActions } from 'engine/ui/actions';
-import { GUIState, GUIAPI } from 'engine/ui/store';
+import { DebugState } from 'engine/ui/components/Debug/state';
 import { debugReducer } from 'engine/ui/components/Debug/reducers';
 
-const guiReducers = combineReducers<GUIAPI, GUIActions<any>>({
+interface EngineGUIState {
+    readonly debug: DebugState;
+}
+
+export interface GUIState<T extends {} = {}> {
+    readonly engine: EngineGUIState;
+    readonly game: T;
+}
+
+const guiReducers = combineReducers<EngineGUIState, GUIActions<any>>({
     debug: debugReducer
 });
 

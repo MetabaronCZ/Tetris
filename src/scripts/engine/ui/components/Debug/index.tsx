@@ -1,8 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { GUIState } from 'engine/ui/store';
-import { DebugState } from 'engine/ui/components/debug/reducers';
+import { GUIState } from 'engine/ui/reducers';
+import { DebugState } from 'engine/ui/components/Debug/state';
 
 type Props = DebugState;
 
@@ -33,8 +33,8 @@ const Debug: React.SFC<Props> = ({ ups, fps }) => (
                 {ups.avg.toFixed(3)}
             </div>
 
-            <div className="Debug-column"></div>
-            <div className="Debug-column"></div>
+            <div className="Debug-column" />
+            <div className="Debug-column" />
         </div>
     </div>
 );

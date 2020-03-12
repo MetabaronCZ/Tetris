@@ -29,6 +29,9 @@ class SpriteAtlas<T extends string = never> {
         const sprites: Partial<Sprites<T>> = {};
 
         for (const id in def.sprites) {
+            if (!Object.prototype.hasOwnProperty.call(def.sprites, id)) {
+                continue;
+            }
             const spr = def.sprites[id];
             const x0 = spr.x / tWidth;
             const y0 = spr.y / tHeight;

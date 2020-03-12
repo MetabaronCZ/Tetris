@@ -1,5 +1,5 @@
 import { GUIAction } from 'engine/ui/actions';
-import { DebugState } from 'engine/ui/components/debug/reducers';
+import { DebugState } from 'engine/ui/components/Debug/state';
 
 type SetDebug = GUIAction<'DEBUG', DebugState>;
 

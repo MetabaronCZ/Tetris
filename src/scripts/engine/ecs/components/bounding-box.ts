@@ -37,12 +37,11 @@ class BoundingBox extends Component {
 
     public isPointInside(point: Vector2D): boolean {
         const { shape } = this;
-    
+
         if ('CIRCLE' === shape.type) {
             return pointInCircle(shape as Circle, point);
-        } else {
-            return pointInRectangle(shape as Rectangle, point);
         }
+        return pointInRectangle(shape as Rectangle, point);
     }
 }
 
