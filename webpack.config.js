@@ -1,9 +1,11 @@
 const path = require('path');
 const webpack = require('webpack');
+const HtmlWebPackPlugin = require('html-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 const pathSrc = './src/scripts';
-const pathDist = path.resolve(__dirname, './dist/scripts');
+const pathTemplates = './src/templates';
+const pathDist = path.resolve(__dirname, './dist');
 const pathPublic = './scripts/';
 const pathModules = './node_modules';
 const pathCache = 'node_modules/.cache';
@@ -24,7 +26,7 @@ module.exports = env => {
             app: `${pathSrc}/index`
         },
         output: {
-            path: pathDist,
+            path: `${pathDist}/scripts`,
             publicPath: pathPublic,
             filename: '[name].js',
             chunkFilename: '[name].js'
@@ -64,6 +66,14 @@ module.exports = env => {
                         }
                     ],
                     exclude: /node_modules/
+                },
+                {
+                    test: /\.html$/,
+                    use: [
+                        {
+                            loader: 'html-loader'
+                        }
+                    ]
                 }
             ]
         },
@@ -71,6 +81,13 @@ module.exports = env => {
             // disable React DevTools offer console message
             new webpack.DefinePlugin({
                 '__REACT_DEVTOOLS_GLOBAL_HOOK__': '({ isDisabled: true })'
+            }),
+            new HtmlWebPackPlugin({
+                template: `${pathTemplates}/index.html`,
+                filename: `${pathDist}/index.html`,
+                minify: {
+                    collapseWhitespace: true
+                }
             })
         ],
         resolve: {
