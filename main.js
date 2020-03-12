@@ -2,22 +2,23 @@ const { app, BrowserWindow } = require('electron');
 
 const createWindow = () => {
     const win = new BrowserWindow({
-        width: 800,
-        height: 600,
+        width: 700,
+        height: 800,
         show: false,
+        resizable: false,
+        useContentSize: true,
         webPreferences: {
             nodeIntegration: true
         }
     });
+    win.setMenuBarVisibility(false);
 
     win.loadFile('./dist/index.html');
 
-    win.maximize();
+    // win.maximize();
     win.show();
 
-    win.webContents.openDevTools({
-        mode: 'right'
-    });
+    // win.webContents.openDevTools({ mode: 'right' });
 };
 
 app.on('ready', createWindow);

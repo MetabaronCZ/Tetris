@@ -16,13 +16,13 @@ const mapStateToProps = (state: GameGUIState): Props => ({
 });
 
 const Info: React.SFC<Props> = ({ score, lines, speed }) => (
-    <div className="Info">
+    <React.Fragment>
         <strong>SCORE:</strong> {score}
         <br />
         <strong>LINES:</strong> {lines}
         <br />
         <strong>SPEED:</strong> {speed}
-    </div>
+    </React.Fragment>
 );
 
 export default connect(mapStateToProps)(Info);

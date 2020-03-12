@@ -22,16 +22,13 @@ const mapStateToProps = (state: GameGUIState): Props => ({
     score: state.game.info.score
 });
 
-const getContent = (phase: Phase, paused: boolean, score: number): React.ReactNode => {
+const getInfoText = (phase: Phase, paused: boolean, score: number): React.ReactNode => {
     if (paused) {
         return <Paused />;
     }
     switch (phase) {
         case 'INIT':
             return <Intro />;
-        case 'RUNNING':
-        case 'ANIMATING':
-            return <Info />;
         case 'GAME_OVER':
             return <Summary score={score} />;
         default:
@@ -40,9 +37,20 @@ const getContent = (phase: Phase, paused: boolean, score: number): React.ReactNo
 };
 
 const Router: React.SFC<Props> = ({ phase, paused, score }) => (
-    <div>
-        <h1 className="Heading">Tetris</h1>
-        {getContent(phase, paused, score)}
+    <div className="Info">
+        <h1 className="Info-heading">Tetris</h1>
+
+        <div className="Info-content">
+            <div className="Info-content-column">
+                <Info />
+            </div>
+
+            <div className="Info-content-main">
+                {getInfoText(phase, paused, score)}
+            </div>
+
+            <div className="Info-content-column" />
+        </div>
     </div>
 );
 

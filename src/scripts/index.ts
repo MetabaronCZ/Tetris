@@ -1,7 +1,7 @@
 import Game from 'engine/game';
 
-import { GameScenes } from 'game/scene';
 import { initGameGUI } from 'game/ui';
+import { GameScenes } from 'game/scene';
 import TetrisScene from 'game/scenes/tetris';
 import LoadingScene from 'game/scenes/loading';
 

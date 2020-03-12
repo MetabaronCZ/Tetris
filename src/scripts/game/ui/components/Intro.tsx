@@ -1,7 +1,7 @@
 import React from 'react';
 
 const Intro: React.SFC = () => (
-    <div className="Info">
+    <div className="Info-text">
         Press <strong>←</strong>, <strong>→</strong>, <strong>↓</strong> to move piece
         <br />
         Press <strong>↑</strong> to rotate piece
