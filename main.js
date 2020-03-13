@@ -1,3 +1,4 @@
+/* eslint @typescript-eslint/explicit-function-return-type: "off" */
 const { app, BrowserWindow } = require('electron');
 
 const createWindow = () => {

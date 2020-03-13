@@ -64,7 +64,8 @@ module.exports = env => {
                         {
                             loader: 'html-loader'
                         }
-                    ]
+                    ],
+                    include: path.resolve(pathTemplates)
                 }
             ]
         },

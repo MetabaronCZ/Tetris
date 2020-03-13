@@ -1,4 +1,5 @@
 /* eslint no-console: "off" */
+/* eslint @typescript-eslint/explicit-function-return-type: "off" */
 const del = require('del');
 const gulp = require('gulp');
 const sass = require('gulp-sass');
