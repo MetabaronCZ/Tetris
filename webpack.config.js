@@ -88,7 +88,8 @@ module.exports = env => {
                 minify: {
                     collapseWhitespace: true
                 }
-            })
+            }),
+            new webpack.ProgressPlugin()
         ],
         resolve: {
             extensions: ['.ts', '.tsx', '.js'],
@@ -117,6 +118,9 @@ module.exports = env => {
         },
         performance: {
             hints: false
+        },
+        watchOptions: {
+            ignored: /node_modules/
         }
     };
 };
