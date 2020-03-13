@@ -45,6 +45,7 @@
         "import/newline-after-import": ["off"],
         "import/prefer-default-export": ["off"],
 
-        "@typescript-eslint/indent": ["error", 4, { "SwitchCase": 1 }]
+        "@typescript-eslint/indent": ["error", 4, { "SwitchCase": 1 }],
+        "@typescript-eslint/explicit-function-return-type": ["error", { "allowExpressions": true }]
     }
 }

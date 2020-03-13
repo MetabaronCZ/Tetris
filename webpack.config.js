@@ -8,7 +8,6 @@ const pathTemplates = './src/templates';
 const pathDist = path.resolve(__dirname, './dist');
 const pathPublic = './scripts/';
 const pathModules = './node_modules';
-const pathCache = 'node_modules/.cache';
 
 module.exports = env => {
     let mode = 'production';
@@ -40,15 +39,7 @@ module.exports = env => {
                 {
                     test: /\.[jt]sx?$/,
                     use: [
-                        {
-                            loader: 'awesome-typescript-loader',
-                            options: {
-                                useBabel: true,
-                                useCache: true,
-                                babelCore: '@babel/core',
-                                cacheDirectory: `${pathCache}/awesome-typescript-loader`
-                            }
-                        }
+                        { loader: 'ts-loader' }
                     ],
                     include: path.resolve(pathSrc),
                     exclude: /node_modules/
@@ -88,8 +79,7 @@ module.exports = env => {
                 minify: {
                     collapseWhitespace: true
                 }
-            }),
-            new webpack.ProgressPlugin()
+            })
         ],
         resolve: {
             extensions: ['.ts', '.tsx', '.js'],
