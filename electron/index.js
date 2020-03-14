@@ -1,8 +1,11 @@
 /* eslint @typescript-eslint/explicit-function-return-type: "off" */
 const { app, BrowserWindow } = require('electron');
 
+const pathRoot = __dirname;
+
 const createWindow = () => {
     const win = new BrowserWindow({
+        icon: `${pathRoot}/icon.ico`,
         width: 700,
         height: 800,
         show: false,
@@ -14,7 +17,7 @@ const createWindow = () => {
     });
     win.setMenuBarVisibility(false);
 
-    win.loadFile('./dist/index.html');
+    win.loadFile(`${pathRoot}/index.html`);
 
     // win.maximize();
     win.show();

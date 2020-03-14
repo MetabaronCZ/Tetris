@@ -16,6 +16,8 @@ const stylelintConfig = { reporters: [{ formatter: 'string', console: true }] };
 
 const pathSrc = './src';
 const pathDist = './dist';
+const pathBuild = './build';
+const pathElectron = './electron';
 
 const paths = {
     styles: {
@@ -42,13 +44,19 @@ const paths = {
         src: `${pathSrc}/sounds`,
         files: `${pathSrc}/sounds/**/*`,
         dist: `${pathDist}/sounds`
+    },
+    electron: {
+        src: pathElectron,
+        files: `${pathElectron}/**/*`,
+        dist: pathDist
     }
 };
 
 let env = 'prod';
 
-// clear "dist" folder
-const taskClear = () => del(pathDist);
+// clear build folders
+const taskClearDist = () => del(pathDist);
+const taskClearBuild = () => del(pathBuild);
 
 // lint SASS files
 const taskStylelint = () => {
@@ -88,6 +96,13 @@ const taskSounds = () => {
     return gulp.src(paths.sounds.files)
         .pipe(changed(paths.sounds.dist))
         .pipe(gulp.dest(paths.sounds.dist));
+};
+
+// copy Electron-specific files
+const taskElectron = () => {
+    return gulp.src(paths.electron.files)
+        .pipe(changed(paths.electron.dist))
+        .pipe(gulp.dest(paths.electron.dist));
 };
 
 // build JS
@@ -132,18 +147,21 @@ const taskWatch = cb => {
     gulp.watch(paths.fonts.files, taskFonts);
     gulp.watch(paths.images.files, taskImages);
     gulp.watch(paths.sounds.files, taskSounds);
+    gulp.watch(paths.electron.files, taskElectron);
     cb();
 };
 
 // build app
 const build = gulp.series(
-    taskClear,
+    taskClearDist,
+    taskElectron,
     taskFonts, taskImages, taskSounds,
     taskStylelint, taskStyles,
     taskScripts
 );
 
-// develop app (set watch before build, because "watch mode" in Webpack)
-const dev = gulp.series(taskWatch, build);
-
-module.exports = { build, dev };
+module.exports = {
+    clean: gulp.parallel(taskClearBuild, taskClearDist),
+    build: gulp.series(taskClearBuild, build),
+    dev: gulp.series(taskWatch, build)
+};
